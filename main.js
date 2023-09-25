@@ -2,40 +2,50 @@ import Phaser from "phaser"
 
 class BaseScene extends Phaser.Scene {
 	preload() {
-		this.load.image("play", "public/assets/play.png");
-		this.load.image("play-bg-icon", "public/assets/apple_outline_thic_white.png")
+		this.load.image("start-play", "public/assets/play.png");
+		this.load.image("start-play-bg-apple", "public/assets/apple_outline_thic_white.png") // 200 x 200	
+		this.load.image("start-play-bg-banan", "public/assets/banana_outline_thic_white.png") 		
+		this.load.image("start-play-bg-cherry", "public/assets/cherry_outline_thic_white.png") 
+		this.load.image("start-play-bg-grapges", "public/assets/grapes_outline_thic_white.png") 
+		this.load.image("start-play-bg-mushroom", "public/assets/mushroom_outline_thic_white.png")
 	}
 
 	create() {
-		console.log(window.innerWidth)
-		console.log(window.innerHeight)
 		const imgSize = 120*0.8;
 		const imageMargin = 15;
 		let verticalCount = Math.ceil(window.innerHeight / (imgSize+imageMargin)) + 1;
 		let horizontalCount = Math.ceil(window.innerWidth / (imgSize + imageMargin)) + 1;
 
-		console.log(horizontalCount)
-		console.log(verticalCount)
+		let backgroundImages = [
+			"start-play-bg-apple", 
+			"start-play-bg-banan", 
+			"start-play-bg-cherry",
+			"start-play-bg-grapges",
+			"start-play-bg-mushroom"
+		]
 
+		let backgroundImageIndex = 0;
 		for (let i = 0; i < verticalCount; i++) {
 			for (let x = 0; x < horizontalCount; x++) {
+				if (backgroundImageIndex >= backgroundImages.length) {
+					backgroundImageIndex = 0;
+				}
+
 				const backgroundImage = this.add.image(
-					(x * imgSize) + (x * imageMargin) + imgSize/2, 
-					(i * imgSize) + (i * imageMargin) + imgSize/2, 
-					"play-bg-icon"
+					(x * imgSize) + imgSize/2, 
+					(i * imgSize) + imgSize/2, 
+					backgroundImages[backgroundImageIndex]
 				)
 				backgroundImage.backgroundImage = "transparent"
-				backgroundImage.scale=0.8
-//				backgroundImage.scale = 0.1
+				backgroundImage.scale=0.4 // 80
+				backgroundImageIndex++
 			}
+
+			backgroundImages = backgroundImages.reverse()
 		}
-		const playButtonImage = this.add.image(window.innerWidth/2, window.innerHeight/2,"play");
+		const playButtonImage = this.add.image(window.innerWidth/2, window.innerHeight/2,"start-play");
 		playButtonImage.setInteractive();
 		playButtonImage.scale = 0.08;
-		console.log(playButtonImage.width)
-		console.log(playButtonImage.width*0.05)
-		console.log(playButtonImage.height)
-		console.log(playButtonImage.height*0.05)
 		playButtonImage.on("pointerdown", () => {
 			console.log("start playing")
 		})
@@ -50,4 +60,3 @@ const game = new Phaser.Game({
 	backgroundColor: "#fff7b4",
 })
 
-console.log("Hello world")
