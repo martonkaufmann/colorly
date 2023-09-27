@@ -2,12 +2,14 @@ import Phaser from "phaser";
 
 export default class StartGame extends Phaser.Scene {
     #backgroundImages = {
-        "start-play-bg-apple": "public/assets/apple_outline_thic_white.png",
-        "start-play-bg-banan": "public/assets/banana_outline_thic_white.png",
-        "start-play-bg-cherry": "public/assets/cherry_outline_thic_white.png",
-        "start-play-bg-grapges": "public/assets/grapes_outline_thic_white.png",
-        "start-play-bg-mushroom": "public/assets/mushroom_outline_thic_white.png",
-        "start-play-bg-strawberry": "public/assets/strawberry_outline_thic_white.png",
+        "start-play-bg-apple": "public/assets/apple_outline_white.png",
+        "start-play-bg-banan": "public/assets/banana_outline_white.png",
+        "start-play-bg-pear": "public/assets/pear_outline_white.png",
+        "start-play-bg-grapges": "public/assets/grapes_outline_white.png",
+        "start-play-bg-mushroom": "public/assets/mushroom_outline_white.png",
+        "start-play-bg-strawberry": "public/assets/strawberry_outline_white.png",
+        "start-play-bg-pineapple": "public/assets/pineapple_outline_white.png",
+        "start-play-bg-corn": "public/assets/corn_outline_white.png",
     };
 
     constructor() {
@@ -23,9 +25,9 @@ export default class StartGame extends Phaser.Scene {
     }
 
     create() {
-        const imgSize = 80;
-        let verticalCount = Math.ceil(window.innerHeight / imgSize);
-        let horizontalCount = Math.ceil(window.innerWidth / imgSize);
+        const imgSize = 64;
+        let verticalCount = Math.floor(window.innerHeight / imgSize);
+        let horizontalCount = Math.floor(window.innerWidth / imgSize);
         let backgroundImageNames = Object.keys(this.#backgroundImages);
         let backgroundImageIndex = 0;
 
@@ -36,11 +38,11 @@ export default class StartGame extends Phaser.Scene {
                 }
 
                 const backgroundImage = this.add.image(
-                    x * imgSize + imgSize / 2,
-                    i * imgSize + imgSize / 2,
+                    x * imgSize + imgSize / 2 + (x * 8),
+                    i * imgSize + imgSize / 2 + (i * 8),
                     backgroundImageNames[backgroundImageIndex],
                 );
-                backgroundImage.scale = 0.4; // 80
+                backgroundImage.scale = 0.125; // 64
                 backgroundImageIndex++;
             }
         }

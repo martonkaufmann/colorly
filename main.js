@@ -6,8 +6,9 @@ const game = new Phaser.Game({
     type: Phaser.AUTO,
     width: window.innerWidth,
     height: window.innerHeight,
-//    scene: [StartGame, Color],
-    scene: [Color],
+    scene: [StartGame, Color],
+//    scene: [Color],
+//    scene: [StartGame],
     audio: {
         disableWebAudio: true,
     },
