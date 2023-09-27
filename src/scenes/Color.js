@@ -30,21 +30,59 @@ export default class Color extends Phaser.Scene {
         this.#drawAsset()
         
                 let draw = false;
-                 const g = this.add.graphics({fillStyle: {color: "#aaa"}})       
+        let g;
+
+/*
+setInterval(() => {
+if (draw) {
+                console.log(this.input.mousePointer.x, this.input.mouse.y)
+            }
+        }, 50)
+*/
+
+        const createGraphic = (x, y) => {
+                 g = this.add.graphics()       
+        g.lineStyle(16, 0xf44335, 1);
+        g.beginPath();
+            g.moveTo(x, y)
+        }
+
+    let moves = 0;
+        const maxmoves = 20;
+
+const coordinates = []
+
                 this.input.on("pointerdown", (pointer) => {
-                    draw = true
+                    draw = true;
+            createGraphic(pointer.x, pointer.y);
                 })
         
                 this.input.on("pointerup", (pointer) => {
-                    draw = false;
+if (draw) {
+            g.lineTo(pointer.x, pointer.y)
+    //        g.closePath()
+                g.strokePath()
+            }
+            draw = false;           
                 })
         
                 this.input.on("pointermove", (pointer) => {
                     if (draw) {
-//                        const p = new Phaser.Geom.Point(pointer.x, pointer.y)
-
-                g.fillPoint(pointer.x, pointer.y)
-
+                console.log('move')
+ //               console.log('move')
+g.lineTo(pointer.x, pointer.y)
+                g.strokePath()
+ //               coordinates.push([pointer.x, pointer.y])
+  //              g.fillPoint(pointer.x, pointer.y)
+moves++
+ //               console.log(moves)
+                if (moves === maxmoves) {
+                    // research what save does a bit more
+                    // find out if save or createGraphic is responsible for performance
+                    g.save()
+                    createGraphic(pointer.x, pointer.y)
+                    moves = 0
+                }
                     }
                 })
                 
