@@ -1,8 +1,10 @@
 import Phaser from "phaser";
+import { BACKGROUND_IMAGE_SIZE_DIVIDER, IMAGE_SIZE } from "../constants";
 
 export default class Color extends Phaser.Scene {
     #MAX_STROKES = 10;
-    #DEFAULT_ASSET_SIZE = 512;
+//    #ITEM_IMAGE_SIZE = 512;
+//    #BACKGROUND_SIZE_DIVIDER = 8;
 
     /** @type Phaser.GameObjects.Layer */
     #drawingLayer;
@@ -12,7 +14,7 @@ export default class Color extends Phaser.Scene {
     #backgroundLayer;
 
     #assets = {
-        strawberry: "public/assets/strawberry_outline.png",
+        "strawberry-outline": "public/assets/strawberry_outline.png",
     };
 
     constructor() {
@@ -24,35 +26,38 @@ export default class Color extends Phaser.Scene {
             this.load.image(name, path);
         }
 
-        this.load.image("bg-strawberry", "public/assets/strawberry_outline_white.png");
-        this.load.audio("strawberry", [
+        this.load.image("strawberry-outline-white", "public/assets/strawberry_outline_white.png");
+        this.load.audio("strawberry-outline", [
             "public/assets/audio/HU_strawberry.mp3",
             "public/assets/audio/HU_strawberry.ogg",
         ]);
     }
 
     create() {
-        this.#backgroundLayer = this.add.layer()
-        this.#drawingLayer = this.add.layer()
-        this.#uiLayer = this.add.layer()
+        this.#backgroundLayer = this.add.layer();
+        this.#drawingLayer = this.add.layer();
+        this.#uiLayer = this.add.layer();
 
-        this.#drawBackground();
-        this.#drawAssetName();
-        this.#drawAsset();
+        this.#uiLayer.add(this.#createItemNameText());
+        this.#uiLayer.add(this.#createItemOutlineImage());
+
+        for (const image of this.#createBackground().getChildren()) {
+            this.#backgroundLayer.add(image);
+        }
 
         let strokeCount = 0;
         let isDrawing = false;
         /** @type Phaser.GameObjects.Graphics */
         let graphic;
 
+        // TODO: move drawing to separate function
         const createGraphic = (x, y) => {
-//            graphic = this.#drawingLayer.add.graphics();
-            graphic = new Phaser.GameObjects.Graphics(this)
+            graphic = new Phaser.GameObjects.Graphics(this);
             graphic.lineStyle(24, 0xf44335, 1);
             graphic.beginPath();
             graphic.moveTo(x, y);
 
-            this.#drawingLayer.add(graphic)
+            this.#drawingLayer.add(graphic);
         };
 
         this.input.on("pointerdown", (pointer) => {
@@ -79,65 +84,67 @@ export default class Color extends Phaser.Scene {
                     strokeCount = 0;
                 }
 
-                strokeCount++
+                strokeCount++;
             }
         });
     }
 
-    #drawBackground() {
-        const imgSize = this.#DEFAULT_ASSET_SIZE / 8;
-        const margin = 8;
-        const verticalCount = Math.ceil(window.innerHeight / imgSize);
-        const horizontalCount = Math.ceil(window.innerWidth / imgSize);
-        let backgroundImageIndex = 0;
+    #createBackground() {
+        const backgroundImageSize = IMAGE_SIZE / BACKGROUND_IMAGE_SIZE_DIVIDER;
+        const backgroundImageMargin = 10;
+        const verticalCount = Math.ceil(window.innerHeight / backgroundImageSize);
+        const horizontalCount = Math.ceil(window.innerWidth / backgroundImageSize);
 
-        for (let i = 0; i < verticalCount; i++) {
-            for (let x = 0; x < horizontalCount; x++) {
-                const backgroundImage = new Phaser.GameObjects.Image(
-                    this,
-                    x * imgSize + imgSize / 2 + x * margin,
-                    i * imgSize + imgSize / 2 + i * margin,
-                    "bg-strawberry",
-                );
-
-                backgroundImage.scale = imgSize / this.#DEFAULT_ASSET_SIZE; // 80
-                backgroundImage.setAlpha(0.5);
-    
-                this.#backgroundLayer.add(backgroundImage)
-
-                backgroundImageIndex++;
-            }
-        }
+        return new Phaser.GameObjects.Group(this, {
+            key: "strawberry-outline-white",
+            repeat: horizontalCount * verticalCount,
+            setOrigin: {
+                x: 0,
+                y: 0,
+            },
+            setScale: {
+                x: 1 / BACKGROUND_IMAGE_SIZE_DIVIDER,
+                y: 1 / BACKGROUND_IMAGE_SIZE_DIVIDER,
+            },
+            setAlpha: {
+                value: 0.5,
+            },
+            gridAlign: {
+                width: horizontalCount,
+                cellWidth: backgroundImageSize + backgroundImageMargin,
+                cellHeight: backgroundImageSize + backgroundImageMargin,
+            },
+        });
     }
 
-    #drawAssetName() {
-        const assetNameText = new Phaser.GameObjects.Text(this, 0, 0, "Eper", {
+    #createItemNameText() {
+        const itemNameText = new Phaser.GameObjects.Text(this, 0, 0, "Eper", {
             fontSize: "48px",
             fontStyle: "900",
             fill: "#fff",
             stroke: "#000",
             strokeThickness: 3,
         });
-        assetNameText.setInteractive();
-        assetNameText.setX(window.innerWidth / 2 - assetNameText.displayWidth / 2);
-        assetNameText.setY(assetNameText.displayHeight - 20);
-        assetNameText.on("pointerdown", () => {
+        itemNameText.setInteractive();
+        itemNameText.setX(window.innerWidth / 2 - itemNameText.displayWidth / 2);
+        itemNameText.setY(itemNameText.displayHeight - 20);
+        itemNameText.on("pointerdown", () => {
             // TODO: Inspect if it can be done better
             this.sound.add("strawberry").play();
         });
 
-        this.#uiLayer.add(assetNameText)
+        return itemNameText;
     }
 
-    #drawAsset() {
-        const asset = new Phaser.GameObjects.Image(
-            this, 
-            window.innerWidth / 2, 
-            window.innerHeight / 2, 
-            "strawberry"
-        )
-        asset.scale = 0.8;
+    #createItemOutlineImage() {
+        const itemOutlineImage = new Phaser.GameObjects.Image(
+            this,
+            window.innerWidth / 2,
+            window.innerHeight / 2,
+            "strawberry-outline",
+        );
+        itemOutlineImage.scale = 0.8;
 
-        this.#uiLayer.add(asset)
+        return itemOutlineImage;
     }
 }
