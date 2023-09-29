@@ -13,7 +13,7 @@ export default class StartGame extends Phaser.Scene {
     };
 
     constructor() {
-        super("StartGame")
+        super("StartGame");
     }
 
     preload() {
@@ -38,8 +38,8 @@ export default class StartGame extends Phaser.Scene {
                 }
 
                 const backgroundImage = this.add.image(
-                    x * imgSize + imgSize / 2 + (x * 8),
-                    i * imgSize + imgSize / 2 + (i * 8),
+                    x * imgSize + imgSize / 2 + x * 8,
+                    i * imgSize + imgSize / 2 + i * 8,
                     backgroundImageNames[backgroundImageIndex],
                 );
                 backgroundImage.scale = 0.125; // 64
@@ -51,8 +51,7 @@ export default class StartGame extends Phaser.Scene {
         playButtonImage.setInteractive();
         playButtonImage.scale = 0.08;
         playButtonImage.on("pointerdown", () => {
-            this.scene.start("Color")
+            this.scene.start("Color");
         });
     }
 }
-

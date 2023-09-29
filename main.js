@@ -7,11 +7,10 @@ const game = new Phaser.Game({
     width: window.innerWidth,
     height: window.innerHeight,
     scene: [StartGame, Color],
-//    scene: [Color],
-//    scene: [StartGame],
+    //    scene: [Color],
+    //    scene: [StartGame],
     audio: {
         disableWebAudio: true,
     },
     backgroundColor: "#fff7b4",
 });
-
