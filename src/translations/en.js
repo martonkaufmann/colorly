@@ -1,0 +1,15 @@
+export default {
+    strawberry: "strawberry",
+    apple: "apple",
+    banana: "banana",
+    carrot: "carrot",
+    cauliflower: "cauliflower",
+    corn: "corn",
+    grapes: "grapes",
+    mushroom: "mushroom",
+    orange: "orange",
+    pear: "pear",
+    peas: "peas",
+    pineapple: "pineapple",
+    plum: "plum",
+};

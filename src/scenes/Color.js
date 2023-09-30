@@ -1,10 +1,9 @@
 import Phaser from "phaser";
 import { BACKGROUND_IMAGE_SIZE_DIVIDER, IMAGE_SIZE } from "../constants";
+import i18next from "i18next";
 
 export default class Color extends Phaser.Scene {
     #MAX_STROKES = 10;
-//    #ITEM_IMAGE_SIZE = 512;
-//    #BACKGROUND_SIZE_DIVIDER = 8;
 
     /** @type Phaser.GameObjects.Layer */
     #drawingLayer;
@@ -118,7 +117,8 @@ export default class Color extends Phaser.Scene {
     }
 
     #createItemNameText() {
-        const itemNameText = new Phaser.GameObjects.Text(this, 0, 0, "Eper", {
+        const name = i18next.t("strawberry");
+        const itemNameText = new Phaser.GameObjects.Text(this, 0, 0, name.charAt(0).toUpperCase() + name.slice(1), {
             fontSize: "48px",
             fontStyle: "900",
             fill: "#fff",
