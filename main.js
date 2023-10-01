@@ -9,8 +9,8 @@ i18next.init({
     lng: "hu", // if you're using a language detector, do not define the lng option
     debug: true,
     resources: {
-        en: { translation: { en } },
-        hu: { translation: { hu } },
+        en: { translation: en },
+        hu: { translation: hu },
     },
 });
 

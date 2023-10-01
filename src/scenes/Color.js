@@ -3,7 +3,8 @@ import { BACKGROUND_IMAGE_SIZE_DIVIDER, IMAGE_SIZE } from "../constants";
 import i18next from "i18next";
 
 export default class Color extends Phaser.Scene {
-    #MAX_STROKES = 10;
+    //#MAX_STROKE_COUNT = 10;    
+    #MAX_STROKE_COUNT = 30;
 
     /** @type Phaser.GameObjects.Layer */
     #drawingLayer;
@@ -26,7 +27,7 @@ export default class Color extends Phaser.Scene {
         }
 
         this.load.image("strawberry-outline-white", "public/assets/strawberry_outline_white.png");
-        this.load.audio("strawberry-outline", [
+        this.load.audio("strawberry", [
             "public/assets/audio/HU_strawberry.mp3",
             "public/assets/audio/HU_strawberry.ogg",
         ]);
@@ -51,12 +52,17 @@ export default class Color extends Phaser.Scene {
 
         // TODO: move drawing to separate function
         const createGraphic = (x, y) => {
+            // TODO: Create and add two graphics one
+            // for future use and move preious future one
+            // to be current one
             graphic = new Phaser.GameObjects.Graphics(this);
             graphic.lineStyle(24, 0xf44335, 1);
             graphic.beginPath();
             graphic.moveTo(x, y);
 
             this.#drawingLayer.add(graphic);
+
+//            console.log("createGraphic")
         };
 
         this.input.on("pointerdown", (pointer) => {
@@ -78,12 +84,14 @@ export default class Color extends Phaser.Scene {
                 graphic.lineTo(pointer.x, pointer.y);
                 graphic.strokePath();
 
-                if (strokeCount === this.#MAX_STROKES) {
+                if (strokeCount === this.#MAX_STROKE_COUNT) {
                     createGraphic(pointer.x, pointer.y);
                     strokeCount = 0;
                 }
 
                 strokeCount++;
+
+                console.log("pointermove")
             }
         });
     }
