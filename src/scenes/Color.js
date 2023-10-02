@@ -3,7 +3,7 @@ import { BACKGROUND_IMAGE_SIZE_DIVIDER, IMAGE_SIZE } from "../constants";
 import i18next from "i18next";
 
 export default class Color extends Phaser.Scene {
-    //#MAX_STROKE_COUNT = 10;    
+    //#MAX_STROKE_COUNT = 10;
     #MAX_STROKE_COUNT = 30;
 
     /** @type Phaser.GameObjects.Layer */
@@ -49,33 +49,72 @@ export default class Color extends Phaser.Scene {
         let isDrawing = false;
         /** @type Phaser.GameObjects.Graphics */
         let graphic;
+        let coordinates = [];
 
         // TODO: move drawing to separate function
         const createGraphic = (x, y) => {
             // TODO: Create and add two graphics one
-            // for future use and move preious future one
+            // for future use and move previous future one
             // to be current one
             graphic = new Phaser.GameObjects.Graphics(this);
             graphic.lineStyle(24, 0xf44335, 1);
+            //           graphic.lineStyle(4, 0xf44335, 1);
             graphic.beginPath();
             graphic.moveTo(x, y);
 
             this.#drawingLayer.add(graphic);
 
-//            console.log("createGraphic")
+            //            console.log("createGraphic")
         };
 
         this.input.on("pointerdown", (pointer) => {
             isDrawing = true;
+
+            coordinates.push(new Phaser.Geom.Point(pointer.x, pointer.y));
+
             createGraphic(pointer.x, pointer.y);
         });
 
         this.input.on("pointerup", (pointer) => {
             if (isDrawing) {
+                // coordinates.push([pointer.x, pointer.y])
+
+                coordinates.push(new Phaser.Geom.Point(pointer.x, pointer.y));
+
                 graphic.lineTo(pointer.x, pointer.y);
                 graphic.strokePath();
+
+                //            console.log(coordinates)
+
+                const g = new Phaser.GameObjects.Graphics(this);
+                g.moveTo(0, 0);
+                g.beginPath();
+                g.lineStyle(2, 0xfff, 1);
+                //                g.fillStyle(0xfff)
+                //           g.strokePoints(coordinates)
+
+                const p = new Phaser.Geom.Polygon(coordinates);
+                console.log("coordinates", coordinates);
+                console.log("area", p.area);
+                //              console.log(p.calculateArea())
+                //                console.log(p.area)
+
+                const simplified = Phaser.Geom.Polygon.Simplify(p);
+
+                console.log("perimiter", Phaser.Geom.Polygon.Perimeter(p));
+                console.log("smoothed", Phaser.Geom.Polygon.Smooth(p));
+                console.log("simplified", simplified);
+                console.log("simplified perimiter", Phaser.Geom.Polygon.Perimeter(simplified));
+                //                console.log(simplified.points)
+                //               console.log(sim)
+
+                g.strokePoints(simplified.points);
+                //                g.cal
+                //                g.fillPoint(coordinates)
+                this.#drawingLayer.add(g);
             }
 
+            coordinates = [];
             isDrawing = false;
         });
 
@@ -84,6 +123,10 @@ export default class Color extends Phaser.Scene {
                 graphic.lineTo(pointer.x, pointer.y);
                 graphic.strokePath();
 
+                coordinates.push(new Phaser.Geom.Point(pointer.x, pointer.y));
+
+                //   coordinates.push([pointer.x, pointer.y])
+
                 if (strokeCount === this.#MAX_STROKE_COUNT) {
                     createGraphic(pointer.x, pointer.y);
                     strokeCount = 0;
@@ -91,7 +134,7 @@ export default class Color extends Phaser.Scene {
 
                 strokeCount++;
 
-                console.log("pointermove")
+                console.log("pointermove");
             }
         });
     }
