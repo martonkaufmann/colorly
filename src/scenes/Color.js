@@ -86,32 +86,32 @@ export default class Color extends Phaser.Scene {
 
                 //            console.log(coordinates)
 
-                const g = new Phaser.GameObjects.Graphics(this);
-                g.moveTo(0, 0);
-                g.beginPath();
-                g.lineStyle(2, 0xfff, 1);
+//                const g = new Phaser.GameObjects.Graphics(this);
+//                g.moveTo(0, 0);
+//                g.beginPath();
+//                g.lineStyle(2, 0xfff, 1);
                 //                g.fillStyle(0xfff)
                 //           g.strokePoints(coordinates)
 
-                const p = new Phaser.Geom.Polygon(coordinates);
-                console.log("coordinates", coordinates);
-                console.log("area", p.area);
+//                const p = new Phaser.Geom.Polygon(coordinates);
+//                console.log("coordinates", coordinates);
+//                console.log("area", p.area);
                 //              console.log(p.calculateArea())
                 //                console.log(p.area)
 
-                const simplified = Phaser.Geom.Polygon.Simplify(p);
+//                const simplified = Phaser.Geom.Polygon.Simplify(p);
 
-                console.log("perimiter", Phaser.Geom.Polygon.Perimeter(p));
-                console.log("smoothed", Phaser.Geom.Polygon.Smooth(p));
-                console.log("simplified", simplified);
-                console.log("simplified perimiter", Phaser.Geom.Polygon.Perimeter(simplified));
+//                console.log("perimiter", Phaser.Geom.Polygon.Perimeter(p));
+//                console.log("smoothed", Phaser.Geom.Polygon.Smooth(p));
+//                console.log("simplified", simplified);
+//                console.log("simplified perimiter", Phaser.Geom.Polygon.Perimeter(simplified));
                 //                console.log(simplified.points)
                 //               console.log(sim)
 
-                g.strokePoints(simplified.points);
+//                g.strokePoints(simplified.points);
                 //                g.cal
                 //                g.fillPoint(coordinates)
-                this.#drawingLayer.add(g);
+//                this.#drawingLayer.add(g);
             }
 
             coordinates = [];
@@ -131,6 +131,8 @@ export default class Color extends Phaser.Scene {
                     createGraphic(pointer.x, pointer.y);
                     strokeCount = 0;
                 }
+
+                graphic.createBitmapMask().bitmapMask.getSourceImage()
 
                 strokeCount++;
 
