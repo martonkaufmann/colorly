@@ -34,16 +34,65 @@ export default class Color extends Phaser.Scene {
     }
 
     create() {
-        this.#backgroundLayer = this.add.layer();
+
+this.#createBackground()
+//        this.#backgroundLayer = this.add.layer();
         this.#drawingLayer = this.add.layer();
         this.#uiLayer = this.add.layer();
 
-        this.#uiLayer.add(this.#createItemNameText());
-        this.#uiLayer.add(this.#createItemOutlineImage());
+        const outlineImage = this.#createItemOutlineImage()
 
+        this.#uiLayer.add(this.#createItemNameText());
+        this.#uiLayer.add(outlineImage);
+        /*
         for (const image of this.#createBackground().getChildren()) {
-            this.#backgroundLayer.add(image);
+          this.#backgroundLayer.add(image);
         }
+        */
+
+console.log(outlineImage.displayWidth)
+console.log(outlineImage.displayHeight)
+console.log(outlineImage.x)
+console.log(outlineImage.y)
+//console.log(outlineImage.getTopRight())
+//console.log(outlineImage.getTopLeft())
+//console.log(outlineImage.getBottomRight())
+
+                const tl = outlineImage.getTopLeft()
+        const br = outlineImage.getBottomRight()    
+        /*
+        const tl = outlineImage.getTopLeft()
+        console.log(tl)
+        console.log(tl.x, tl.y)
+        const graphics1 = new Phaser.GameObjects.Graphics(this);
+        graphics1.fillStyle(0x2266aa)
+        graphics1.fillPointShape(new Phaser.Geom.Point(tl.x, tl.y), 25)
+        this.#uiLayer.add(graphics1)
+
+        const br = outlineImage.getBottomRight()    
+        console.log(br)
+        console.log(br.x, br.y)
+        const graphics2 = new Phaser.GameObjects.Graphics(this);
+        graphics2.fillStyle(0x2266aa)
+        graphics2.fillPointShape(new Phaser.Geom.Point(br.x, br.y), 25)
+        this.#uiLayer.add(graphics2)
+        */
+
+        
+                const renderer = this.sys.renderer
+
+                renderer.snapshotArea(tl.x, tl.y, outlineImage.displayWidth, outlineImage.displayHeight, function(image) {
+                    console.log('area snapshot created')
+                    console.log(image)
+            console.log(image.src)
+                })
+                
+        /*
+                renderer.snapshotPixel(200, 200, function(pixel) {
+                    console.log('pixel snapshot created')
+                    console.log(pixel)
+                })
+                */
 
         let strokeCount = 0;
         let isDrawing = false;
@@ -86,32 +135,32 @@ export default class Color extends Phaser.Scene {
 
                 //            console.log(coordinates)
 
-//                const g = new Phaser.GameObjects.Graphics(this);
-//                g.moveTo(0, 0);
-//                g.beginPath();
-//                g.lineStyle(2, 0xfff, 1);
+                //                const g = new Phaser.GameObjects.Graphics(this);
+                //                g.moveTo(0, 0);
+                //                g.beginPath();
+                //                g.lineStyle(2, 0xfff, 1);
                 //                g.fillStyle(0xfff)
                 //           g.strokePoints(coordinates)
 
-//                const p = new Phaser.Geom.Polygon(coordinates);
-//                console.log("coordinates", coordinates);
-//                console.log("area", p.area);
+                //                const p = new Phaser.Geom.Polygon(coordinates);
+                //                console.log("coordinates", coordinates);
+                //                console.log("area", p.area);
                 //              console.log(p.calculateArea())
                 //                console.log(p.area)
 
-//                const simplified = Phaser.Geom.Polygon.Simplify(p);
+                //                const simplified = Phaser.Geom.Polygon.Simplify(p);
 
-//                console.log("perimiter", Phaser.Geom.Polygon.Perimeter(p));
-//                console.log("smoothed", Phaser.Geom.Polygon.Smooth(p));
-//                console.log("simplified", simplified);
-//                console.log("simplified perimiter", Phaser.Geom.Polygon.Perimeter(simplified));
+                //                console.log("perimiter", Phaser.Geom.Polygon.Perimeter(p));
+                //                console.log("smoothed", Phaser.Geom.Polygon.Smooth(p));
+                //                console.log("simplified", simplified);
+                //                console.log("simplified perimiter", Phaser.Geom.Polygon.Perimeter(simplified));
                 //                console.log(simplified.points)
                 //               console.log(sim)
 
-//                g.strokePoints(simplified.points);
+                //                g.strokePoints(simplified.points);
                 //                g.cal
                 //                g.fillPoint(coordinates)
-//                this.#drawingLayer.add(g);
+                //                this.#drawingLayer.add(g);
             }
 
             coordinates = [];
@@ -132,7 +181,28 @@ export default class Color extends Phaser.Scene {
                     strokeCount = 0;
                 }
 
-                graphic.createBitmapMask().bitmapMask.getSourceImage()
+                //const bm = new Phaser.Display.Masks.BitmapMask(this, graphic) 
+  //              const texture = graphic.generateTexture('graphic')
+
+//                this.sys.renderer.snapshotArea
+/*
+                const dt = new Phaser.Textures.DynamicTexture(
+                    this.sys.textures,
+                    'graphic',
+                )
+                */
+//                const img = new Phaser.GameObjects.Image(this, 0, 0, 'graphic')
+
+  //              const sprite = new Phaser.GameObjects.Sprite(this, x, y, 'graphic')
+
+    //            console.log(bm); 
+//                console.log(img.createBitmapMask())
+//                console.log(img.createBitmapMask().bitmapMask)
+
+//                console.log(dt)
+//                console.log(dt.getDataSourceImage('graphic'))
+//                console.log(bm.bitmapMask);
+
 
                 strokeCount++;
 
@@ -147,6 +217,7 @@ export default class Color extends Phaser.Scene {
         const verticalCount = Math.ceil(window.innerHeight / backgroundImageSize);
         const horizontalCount = Math.ceil(window.innerWidth / backgroundImageSize);
 
+        // TODO: Group creates it's own layer, handle this
         return new Phaser.GameObjects.Group(this, {
             key: "strawberry-outline-white",
             repeat: horizontalCount * verticalCount,
@@ -196,7 +267,8 @@ export default class Color extends Phaser.Scene {
             window.innerHeight / 2,
             "strawberry-outline",
         );
-        itemOutlineImage.scale = 0.8;
+        itemOutlineImage.scale = 0.5;
+//        itemOutlineImage.
 
         return itemOutlineImage;
     }
