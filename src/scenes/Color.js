@@ -11,10 +11,14 @@ export default class Color extends Phaser.Scene {
     /** @type Phaser.GameObjects.Layer */
     #uiLayer;
     /** @type Phaser.GameObjects.Layer */
-    #backgroundLayer;
+//    #backgroundLayer;
 
     #assets = {
-        "strawberry-outline": "public/assets/strawberry_outline.png",
+        "strawberry-detect": "public/assets/strawberry_detect.svg",        
+        "strawberry-outline": "public/assets/strawberry_outline.svg",
+        "strawberry-colors": "public/assets/strawberry_colors.svg",
+        "strawberry-outline-white": "public/assets/strawberry_outline_white.svg",
+
     };
 
     constructor() {
@@ -23,10 +27,10 @@ export default class Color extends Phaser.Scene {
 
     preload() {
         for (const [name, path] of Object.entries(this.#assets)) {
-            this.load.image(name, path);
+            this.load.svg(name, path);
         }
 
-        this.load.image("strawberry-outline-white", "public/assets/strawberry_outline_white.png");
+//        this.load.svg("strawberry-outline-white", "public/assets/strawberry_outline_white.svg");
         this.load.audio("strawberry", [
             "public/assets/audio/HU_strawberry.mp3",
             "public/assets/audio/HU_strawberry.ogg",
@@ -50,15 +54,20 @@ this.#createBackground()
         }
         */
 
+/*
 console.log(outlineImage.displayWidth)
 console.log(outlineImage.displayHeight)
-console.log(outlineImage.x)
-console.log(outlineImage.y)
+console.log(outlineImage.width)
+console.log(outlineImage.height)
+*/
+
+//console.log(outlineImage.x)
+//console.log(outlineImage.y)
 //console.log(outlineImage.getTopRight())
 //console.log(outlineImage.getTopLeft())
 //console.log(outlineImage.getBottomRight())
 
-                const tl = outlineImage.getTopLeft()
+        const tl = outlineImage.getTopLeft()
         const br = outlineImage.getBottomRight()    
         /*
         const tl = outlineImage.getTopLeft()
@@ -78,7 +87,42 @@ console.log(outlineImage.y)
         this.#uiLayer.add(graphics2)
         */
 
-        
+        console.log(tl)
+        console.log(br)
+        console.log(new Date())
+
+
+        const pixels = [];
+        const renderer = this.sys.renderer;
+
+//        for (let x = tl.x; x < br.x; x++) {
+//            for (let y = tl.y; y < br.y; y++) {
+//                outlineImage.getPix
+//                console.log(x, y)
+//                this.imag
+                //
+ //               this.textures.get                
+//                const pixelColor = this.textures.getPixel(x, y, "strawberry-detect")
+
+//                if (pixelColor === )
+
+   //             if (pixelColor?.red === 255 && pixelColor?.blue === 255) {
+//                    console.log('Detected at: ', x, y)
+       //         }
+
+//                console.log(this.textures.getPixel(x, y, "strawberry-detect"))
+                /*
+                renderer.snapshotPixel(x, y, function(p) {
+                    console.log(p)
+                })
+                */
+                
+//            }
+//        }
+
+        console.log(new Date())
+  
+/*
                 const renderer = this.sys.renderer
 
                 renderer.snapshotArea(tl.x, tl.y, outlineImage.displayWidth, outlineImage.displayHeight, function(image) {
@@ -86,7 +130,7 @@ console.log(outlineImage.y)
                     console.log(image)
             console.log(image.src)
                 })
-                
+*/                
         /*
                 renderer.snapshotPixel(200, 200, function(pixel) {
                     console.log('pixel snapshot created')
@@ -206,7 +250,7 @@ console.log(outlineImage.y)
 
                 strokeCount++;
 
-                console.log("pointermove");
+//                console.log("pointermove");
             }
         });
     }
@@ -267,7 +311,7 @@ console.log(outlineImage.y)
             window.innerHeight / 2,
             "strawberry-outline",
         );
-        itemOutlineImage.scale = 0.5;
+        itemOutlineImage.scale = 0.8;
 //        itemOutlineImage.
 
         return itemOutlineImage;

@@ -7,7 +7,7 @@ export default class StartGame extends Phaser.Scene {
         "start-play-bg-pear": "public/assets/pear_outline_white.png",
         "start-play-bg-grapges": "public/assets/grapes_outline_white.png",
         "start-play-bg-mushroom": "public/assets/mushroom_outline_white.png",
-        "start-play-bg-strawberry": "public/assets/strawberry_outline_white.png",
+        "start-play-bg-strawberry": "public/assets/strawberry_outline_white.svg",
         "start-play-bg-pineapple": "public/assets/pineapple_outline_white.png",
         "start-play-bg-corn": "public/assets/corn_outline_white.png",
     };
