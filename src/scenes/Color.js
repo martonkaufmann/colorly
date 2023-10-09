@@ -18,7 +18,6 @@ export default class Color extends Phaser.Scene {
         "strawberry-outline": "public/assets/strawberry_outline.svg",
         "strawberry-colors": "public/assets/strawberry_colors.svg",
         "strawberry-outline-white": "public/assets/strawberry_outline_white.svg",
-
     };
 
     constructor() {
@@ -29,6 +28,10 @@ export default class Color extends Phaser.Scene {
         for (const [name, path] of Object.entries(this.#assets)) {
             this.load.svg(name, path);
         }
+
+        this.load.image("strawberry", "public/assets/strawberry.png")
+        this.load.image("corn", "public/assets/corn.png")
+        this.load.image("brush", "public/assets/brush.png")
 
 //        this.load.svg("strawberry-outline-white", "public/assets/strawberry_outline_white.svg");
         this.load.audio("strawberry", [
@@ -43,6 +46,36 @@ this.#createBackground()
 //        this.#backgroundLayer = this.add.layer();
         this.#drawingLayer = this.add.layer();
         this.#uiLayer = this.add.layer();
+
+        const rope = new Phaser.GameObjects.Rope(
+            this,
+            window.innerWidth / 2,
+            window.innerHeight / 2,
+            "strawberry",
+        )
+
+
+        const mask = new Phaser.GameObjects.Image(
+            this,
+            window.innerWidth / 2,
+            window.innerHeight / 2,
+            "corn",
+        );
+ //       mask.setAlpha(0)
+//        mask.scale = 0.8;
+
+        rope.setMask(rope.createBitmapMask(mask))
+
+
+//        const mask = new 
+
+        this.#uiLayer.add(mask)
+        this.#uiLayer.add(rope)
+//        this.#uiLayer.add(mask)
+
+return;
+
+
 
         const outlineImage = this.#createItemOutlineImage()
 
