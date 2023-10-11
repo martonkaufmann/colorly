@@ -47,12 +47,24 @@ this.#createBackground()
         this.#drawingLayer = this.add.layer();
         this.#uiLayer = this.add.layer();
 
+//        const rt = new Phaser.GameObjects.RenderTexture
+
         const rope = new Phaser.GameObjects.Rope(
             this,
             window.innerWidth / 2,
             window.innerHeight / 2,
             "strawberry",
-        )
+        );
+//        rope.setAlpha(0)
+
+//        rope.setTexture
+
+         const image = new Phaser.GameObjects.Image(
+            this,
+            window.innerWidth / 2,
+            window.innerHeight / 2,
+            "strawberry",
+        );
 
 
         const mask = new Phaser.GameObjects.Image(
@@ -61,17 +73,56 @@ this.#createBackground()
             window.innerHeight / 2,
             "corn",
         );
+//        mask.setAlpha(0)
+
+        const rt = new Phaser.GameObjects.RenderTexture(
+            this, 
+            window.innerWidth/2, 
+            window.innerHeight/2, 
+            window.innerWidth, 
+            window.innerHeight
+        )
+//        rt.col
+
+
+//        mask.setVisible(false);
+//        mask.text
+ //       mask.add
  //       mask.setAlpha(0)
 //        mask.scale = 0.8;
 
-        rope.setMask(rope.createBitmapMask(mask))
+        //rope.setMask(rope.createBitmapMask(mask))        
+        //rope.setMask(rt.createBitmapMask())
 
+//        image.mask = new Phaser.Display.Masks.BitmapMask(this, mask)
+//        image.mask = rt.createBitmapMask()
+       image.setMask(rt.createBitmapMask())
+
+//          rope.createBitmapMask(mask)
+//mask.setAlpha(0)
 
 //        const mask = new 
 
-        this.#uiLayer.add(mask)
-        this.#uiLayer.add(rope)
 //        this.#uiLayer.add(mask)
+        //this.#uiLayer.add(rope)
+        this.#uiLayer.add(image)
+//        this.#uiLayer.add(rt)
+//        this.#uiLayer.add(rt)
+//        this.#uiLayer.add(mask)
+
+        this.input.on("pointermove", (pointer) => {
+            if (pointer.isDown) {
+                rt.draw("brush", pointer.x-32,pointer.y-32)
+                console.log("pointer down")
+                /*
+                console.log(mask.texture)
+                console.log(this.textures.get("strawberry"))
+
+                this.textures.get("strawberry").draw("brush", pointer.x - 32, pointer.y - 32)
+                mask.texture.draw("brush", pointer.x - 32, pointer.y - 32)
+                */
+            }
+        })
 
 return;
 
