@@ -43,23 +43,6 @@ export default class Color extends Phaser.Scene {
         const itemNameText = this.#createItemNameText();
         const { renderTexture, image } = this.#createItemImage();
 
-/*
-        const rope = new Phaser.GameObjects.Rope(
-            this,
-            0,
-            0,
-            "strawberry"
-        )
-        console.log(rope.setMask(rope.createBitmapMask(image)))
-        console.log(rope.updateVertices())
-        console.log(rope.vertices)
-
-        this.#uiLayer.add(rope)
-*/
-//        console.log(rope.vertices)
-
-//        this.ui
-
         this.#uiLayer.add(itemOutlineImage);
         this.#uiLayer.add(itemNameText);
 
@@ -82,16 +65,25 @@ export default class Color extends Phaser.Scene {
 
         this.input.on("pointerdown", (pointer) => {
             renderTexture.draw("brush", pointer.x - 32, pointer.y - 32);
-            /*
-                console.log(renderTexture.getData())
-                console.log(renderTexture.getBounds())
-            console.log(renderTexture.toJSON())
-            console.log(renderTexture.mask)
-            */
         })
 
         this.input.on("pointerup", (pointer) => {
             console.log("pointerup")
+            // console.log(renderTexture.createBitmapMask().bitmapMask.texture)
+
+            renderTexture.snapshot((a, b) => {
+                console.log(a)
+            image.mask.bitmapMask.snapshot((a,b) => {
+                console.log(a)
+            })
+
+            renderTexture.createBitmapMask().bitmapMask.snapshot((a) => {
+                console.log(a)
+                })
+            })
+
+
+            //console.log(renderTexture.createBitmapMask().bitmapMask)
             // TODO: Snapshow texture and check pixels one by one
         })
     }
