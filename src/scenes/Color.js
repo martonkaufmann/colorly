@@ -26,9 +26,7 @@ export default class Color extends Phaser.Scene {
         }
 
         this.load.image("strawberry", "public/assets/strawberry.png");        
-        this.load.image("corn", "public/assets/corn.png");
         this.load.image("brush", "public/assets/brush.png");
-        this.load.image("brush-black", "public/assets/brush_black.png");
 
         this.load.audio("strawberry", [
             "public/assets/audio/HU_strawberry.mp3",
@@ -51,17 +49,34 @@ export default class Color extends Phaser.Scene {
             (image.displayWidth - window.innerWidth) / 2 * -1,
             (image.displayHeight - window.innerHeight) / 2 * -1,
         )
-        
+  
+        const columnPixels = canvas.getPixels()
+//        let total = 0;
         /** @type {Phaser.Geom.Point[]} */
         let pointsToColor = [];
-        for (const rowPixels of canvas.getPixels()) {
+        for (const rowPixels of columnPixels) {
             for (const pixel of rowPixels) {
+          //      total++
                 if (pixel.color === 11195392) {
                     pointsToColor.push(new Phaser.Geom.Point(pixel.x, pixel.y))
                 }
             }
         }
         const totalPointsToColorCount = pointsToColor.length
+        /*
+        console.log(total)
+        console.log(totalPointsToColorCount)
+
+        const pixels = canvas.getPixels()
+        let a= 0;
+            for (const point of pointsToColor) {
+                if (pixels[point.y][point.x].color === 11195392) {
+                 //   remainingPointsToColor.push(point)
+                a++
+                }
+            }
+        console.log(a)
+        */
 
         this.#uiLayer.add(itemOutlineImage);
         this.#uiLayer.add(itemNameText);
@@ -94,13 +109,16 @@ export default class Color extends Phaser.Scene {
             const pixels = canvas.getPixels()
             /** @type {Phaser.Geom.Point[]} */
             const remainingPointsToColor = []
-
+//console.log(pixels)
             for (const point of pointsToColor) {
-                if (pixels[point.x][point.y].color === 11195392) {
+                if (pixels[point.y][point.x].color === 11195392) {
                     remainingPointsToColor.push(point)
                 }
             }
 
+//            console.log(pixels)
+            console.log(pointsToColor.length)
+            console.log(remainingPointsToColor.length)
             pointsToColor = remainingPointsToColor
 
             console.log(totalPointsToColorCount)
@@ -111,7 +129,7 @@ export default class Color extends Phaser.Scene {
             }
 
 //            console.log(pointsToColor.length)
-//            console.log(canvas.getCanvas().toDataURL())
+            console.log(canvas.getCanvas().toDataURL())
 
             // TODO: Snapshow texture and check pixels one by one
         })
