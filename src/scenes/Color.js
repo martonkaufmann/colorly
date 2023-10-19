@@ -16,6 +16,10 @@ export default class Color extends Phaser.Scene {
         "strawberry-outline-white": "public/assets/strawberry_outline_white.svg",
     };
 
+    get #REFERENCE_COLOR() {
+        return 11195392
+    }
+
     constructor() {
         super("Color");
     }
@@ -42,18 +46,21 @@ export default class Color extends Phaser.Scene {
         const background = this.#createBackground();
         const itemOutlineImage = this.#createItemOutlineImage();
         const itemNameText = this.#createItemNameText();
-        const { renderTexture, image, canvasTexture } = this.#createItemImage();
-        let pointsToColor = this.#getPointsToColor(canvasTexture);
+        const {
+            renderTexture: itemImageDrawingTexture,
+            image: itemMaskedImage,
+            canvasTexture: itemImageReferenceTexture,
+        } = this.#createItemImage();
+        let pointsToColor = this.#getPointsToColor(itemImageReferenceTexture);
         const totalPointsToColorCount = pointsToColor.length;
-
-        this.#uiLayer.add(itemOutlineImage);
-        this.#uiLayer.add(itemNameText);
 
         for (const image of background.getChildren()) {
             this.#backgroundLayer.add(image);
         }
 
-        this.#drawingLayer.add(image);
+        this.#drawingLayer.add(itemMaskedImage);
+        this.#uiLayer.add(itemOutlineImage);
+        this.#uiLayer.add(itemNameText);
 
         itemNameText.on("pointerdown", () => {
             // TODO: Inspect if it can be done better
@@ -62,18 +69,18 @@ export default class Color extends Phaser.Scene {
 
         this.input.on("pointermove", (pointer) => {
             if (pointer.isDown) {
-                renderTexture.draw("brush", pointer.x - 32, pointer.y - 32);
-                canvasTexture.drawFrame("brush", undefined, pointer.x - 32, pointer.y - 32);
+                itemImageDrawingTexture.draw("brush", pointer.x - 32, pointer.y - 32);
+                itemImageReferenceTexture.drawFrame("brush", undefined, pointer.x - 32, pointer.y - 32);
             }
         });
 
         this.input.on("pointerdown", (pointer) => {
-            renderTexture.draw("brush", pointer.x - 32, pointer.y - 32);
-            canvasTexture.drawFrame("brush", undefined, pointer.x - 32, pointer.y - 32);
+            itemImageDrawingTexture.draw("brush", pointer.x - 32, pointer.y - 32);
+            itemImageReferenceTexture.drawFrame("brush", undefined, pointer.x - 32, pointer.y - 32);
         });
 
-        this.input.on("pointerup", (pointer) => {
-            pointsToColor = this.#getUnColoredPoints(canvasTexture, pointsToColor);
+        this.input.on("pointerup", () => {
+            pointsToColor = this.#getUnColoredPoints(itemImageReferenceTexture, pointsToColor);
 
             if ((totalPointsToColorCount / 100) * 2 >= pointsToColor.length) {
                 alert("COLORED");
@@ -117,7 +124,7 @@ export default class Color extends Phaser.Scene {
 
     #createItemNameText() {
         const name = i18next.t("strawberry");
-        const text = new Phaser.GameObjects.Text(this, 0, 0, name.charAt(0).toUpperCase() + name.slice(1), {
+        const text = new Phaser.GameObjects.Text(this, 0, 0, name.toUpperCase(), {
             fontSize: "48px",
             fontStyle: "900",
             fill: "#fff",
@@ -166,15 +173,15 @@ export default class Color extends Phaser.Scene {
     }
 
     /**
-     * @param {Phaser.Textures.CanvasTexture} canvasTexture
+     * @param {Phaser.Textures.CanvasTexture} referenceTexture
      */
-    #getPointsToColor(canvasTexture) {
-        const columnPixels = canvasTexture.getPixels();
+    #getPointsToColor(referenceTexture) {
+        const columnPixels = referenceTexture.getPixels();
         /** @type {Phaser.Geom.Point[]} */
         let pointsToColor = [];
         for (const rowPixels of columnPixels) {
             for (const pixel of rowPixels) {
-                if (pixel.color === 11195392) {
+                if (pixel.color === this.#REFERENCE_COLOR) {
                     pointsToColor.push(new Phaser.Geom.Point(pixel.x, pixel.y));
                 }
             }
@@ -184,15 +191,15 @@ export default class Color extends Phaser.Scene {
     }
 
     /**
-     * @param {Phaser.Textures.CanvasTexture} canvasTexture
+     * @param {Phaser.Textures.CanvasTexture} referenceTexture
      * @param {Phaser.Geom.Point[]} pointsToColor
      */
-    #getUnColoredPoints(canvasTexture, pointsToColor) {
-        const columnPixels = canvasTexture.getPixels();
+    #getUnColoredPoints(referenceTexture, pointsToColor) {
+        const columnPixels = referenceTexture.getPixels();
         /** @type {Phaser.Geom.Point[]} */
         const unColoredPoints = [];
         for (const point of pointsToColor) {
-            if (columnPixels[point.y][point.x].color === 11195392) {
+            if (columnPixels[point.y][point.x].color === this.#REFERENCE_COLOR) {
                 unColoredPoints.push(point);
             }
         }
