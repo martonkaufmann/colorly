@@ -17,7 +17,7 @@ export default class Color extends Phaser.Scene {
     };
 
     get #REFERENCE_COLOR() {
-        return 11195392
+        return 11195392;
     }
 
     constructor() {
@@ -83,10 +83,25 @@ export default class Color extends Phaser.Scene {
             pointsToColor = this.#getUnColoredPoints(itemImageReferenceTexture, pointsToColor);
 
             if ((totalPointsToColorCount / 100) * 2 >= pointsToColor.length) {
-                alert("COLORED");
-                this.#drawingLayer.add(
-                    new Phaser.GameObjects.Image(this, window.innerWidth / 2, window.innerHeight / 2, "strawberry"),
+                const image = new Phaser.GameObjects.Image(
+                    this,
+                    window.innerWidth / 2,
+                    window.innerHeight / 2,
+                    "strawberry",
                 );
+
+                this.#uiLayer.add(image);
+                this.#drawingLayer.remove(itemMaskedImage);
+                this.#uiLayer.remove(itemOutlineImage);
+
+                this.tweens.add({
+                    targets: image,
+                    ease: "Linear",
+                    props: {
+                        scaleX: { value: 1.05, duration: 1000, yoyo: true },
+                        scaleY: { value: 1.05, duration: 1000, yoyo: true },
+                    },
+                });
             }
         });
     }
