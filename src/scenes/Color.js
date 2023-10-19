@@ -51,32 +51,16 @@ export default class Color extends Phaser.Scene {
         )
   
         const columnPixels = canvas.getPixels()
-//        let total = 0;
         /** @type {Phaser.Geom.Point[]} */
         let pointsToColor = [];
         for (const rowPixels of columnPixels) {
             for (const pixel of rowPixels) {
-          //      total++
                 if (pixel.color === 11195392) {
                     pointsToColor.push(new Phaser.Geom.Point(pixel.x, pixel.y))
                 }
             }
         }
         const totalPointsToColorCount = pointsToColor.length
-        /*
-        console.log(total)
-        console.log(totalPointsToColorCount)
-
-        const pixels = canvas.getPixels()
-        let a= 0;
-            for (const point of pointsToColor) {
-                if (pixels[point.y][point.x].color === 11195392) {
-                 //   remainingPointsToColor.push(point)
-                a++
-                }
-            }
-        console.log(a)
-        */
 
         this.#uiLayer.add(itemOutlineImage);
         this.#uiLayer.add(itemNameText);
@@ -106,32 +90,20 @@ export default class Color extends Phaser.Scene {
         })
 
         this.input.on("pointerup", (pointer) => {
-            const pixels = canvas.getPixels()
+            const columnPixels = canvas.getPixels()
             /** @type {Phaser.Geom.Point[]} */
             const remainingPointsToColor = []
-//console.log(pixels)
             for (const point of pointsToColor) {
-                if (pixels[point.y][point.x].color === 11195392) {
+                if (columnPixels[point.y][point.x].color === 11195392) {
                     remainingPointsToColor.push(point)
                 }
             }
 
-//            console.log(pixels)
-            console.log(pointsToColor.length)
-            console.log(remainingPointsToColor.length)
             pointsToColor = remainingPointsToColor
 
-            console.log(totalPointsToColorCount)
-            console.log(pointsToColor.length)
-
-            if (totalPointsToColorCount / 100 * 20 >= pointsToColor.length) {
+            if (totalPointsToColorCount / 100 * 2 >= pointsToColor.length) {
                 alert('COLORED')
             }
-
-//            console.log(pointsToColor.length)
-            console.log(canvas.getCanvas().toDataURL())
-
-            // TODO: Snapshow texture and check pixels one by one
         })
     }
 
