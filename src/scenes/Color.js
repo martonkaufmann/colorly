@@ -11,7 +11,7 @@ export default class Color extends Phaser.Scene {
     #backgroundLayer;
 
     #assets = {
-        "strawberry-filled": "public/assets/strawberry_filled.svg",        
+        "strawberry-filled": "public/assets/strawberry_filled.svg",
         "strawberry-outline": "public/assets/strawberry_outline.svg",
         "strawberry-outline-white": "public/assets/strawberry_outline_white.svg",
     };
@@ -25,7 +25,7 @@ export default class Color extends Phaser.Scene {
             this.load.svg(name, path);
         }
 
-        this.load.image("strawberry", "public/assets/strawberry.png");        
+        this.load.image("strawberry", "public/assets/strawberry.png");
         this.load.image("brush", "public/assets/brush.png");
 
         this.load.audio("strawberry", [
@@ -42,25 +42,9 @@ export default class Color extends Phaser.Scene {
         const background = this.#createBackground();
         const itemOutlineImage = this.#createItemOutlineImage();
         const itemNameText = this.#createItemNameText();
-        const { renderTexture, image } = this.#createItemImage();
-
-        let canvas = this.textures.createCanvas('c', window.innerWidth, window.innerHeight)
-        canvas = canvas.drawFrame("strawberry-filled", undefined,
-            (image.displayWidth - window.innerWidth) / 2 * -1,
-            (image.displayHeight - window.innerHeight) / 2 * -1,
-        )
-  
-        const columnPixels = canvas.getPixels()
-        /** @type {Phaser.Geom.Point[]} */
-        let pointsToColor = [];
-        for (const rowPixels of columnPixels) {
-            for (const pixel of rowPixels) {
-                if (pixel.color === 11195392) {
-                    pointsToColor.push(new Phaser.Geom.Point(pixel.x, pixel.y))
-                }
-            }
-        }
-        const totalPointsToColorCount = pointsToColor.length
+        const { renderTexture, image, canvasTexture } = this.#createItemImage();
+        let pointsToColor = this.#getPointsToColor(canvasTexture);
+        const totalPointsToColorCount = pointsToColor.length;
 
         this.#uiLayer.add(itemOutlineImage);
         this.#uiLayer.add(itemNameText);
@@ -78,33 +62,26 @@ export default class Color extends Phaser.Scene {
 
         this.input.on("pointermove", (pointer) => {
             if (pointer.isDown) {
-                renderTexture.draw("brush", pointer.x - 32, pointer.y - 32);                
-                canvas.drawFrame("brush", undefined, pointer.x - 32, pointer.y - 32);
+                renderTexture.draw("brush", pointer.x - 32, pointer.y - 32);
+                canvasTexture.drawFrame("brush", undefined, pointer.x - 32, pointer.y - 32);
             }
         });
 
         this.input.on("pointerdown", (pointer) => {
             renderTexture.draw("brush", pointer.x - 32, pointer.y - 32);
-            canvas.drawFrame("brush", undefined, pointer.x - 32, pointer.y - 32);
-
-        })
+            canvasTexture.drawFrame("brush", undefined, pointer.x - 32, pointer.y - 32);
+        });
 
         this.input.on("pointerup", (pointer) => {
-            const columnPixels = canvas.getPixels()
-            /** @type {Phaser.Geom.Point[]} */
-            const remainingPointsToColor = []
-            for (const point of pointsToColor) {
-                if (columnPixels[point.y][point.x].color === 11195392) {
-                    remainingPointsToColor.push(point)
-                }
-            }
+            pointsToColor = this.#getUnColoredPoints(canvasTexture, pointsToColor);
 
-            pointsToColor = remainingPointsToColor
-
-            if (totalPointsToColorCount / 100 * 2 >= pointsToColor.length) {
-                alert('COLORED')
+            if ((totalPointsToColorCount / 100) * 2 >= pointsToColor.length) {
+                alert("COLORED");
+                this.#drawingLayer.add(
+                    new Phaser.GameObjects.Image(this, window.innerWidth / 2, window.innerHeight / 2, "strawberry"),
+                );
             }
-        })
+        });
     }
 
     #createBackground() {
@@ -177,6 +154,49 @@ export default class Color extends Phaser.Scene {
 
         image.setMask(renderTexture.createBitmapMask());
 
-        return { renderTexture, image };
+        let canvasTexture = this.textures.createCanvas("c", window.innerWidth, window.innerHeight);
+        canvasTexture = canvasTexture.drawFrame(
+            "strawberry-filled",
+            undefined,
+            ((image.displayWidth - window.innerWidth) / 2) * -1,
+            ((image.displayHeight - window.innerHeight) / 2) * -1,
+        );
+
+        return { renderTexture, image, canvasTexture };
+    }
+
+    /**
+     * @param {Phaser.Textures.CanvasTexture} canvasTexture
+     */
+    #getPointsToColor(canvasTexture) {
+        const columnPixels = canvasTexture.getPixels();
+        /** @type {Phaser.Geom.Point[]} */
+        let pointsToColor = [];
+        for (const rowPixels of columnPixels) {
+            for (const pixel of rowPixels) {
+                if (pixel.color === 11195392) {
+                    pointsToColor.push(new Phaser.Geom.Point(pixel.x, pixel.y));
+                }
+            }
+        }
+
+        return pointsToColor;
+    }
+
+    /**
+     * @param {Phaser.Textures.CanvasTexture} canvasTexture
+     * @param {Phaser.Geom.Point[]} pointsToColor
+     */
+    #getUnColoredPoints(canvasTexture, pointsToColor) {
+        const columnPixels = canvasTexture.getPixels();
+        /** @type {Phaser.Geom.Point[]} */
+        const unColoredPoints = [];
+        for (const point of pointsToColor) {
+            if (columnPixels[point.y][point.x].color === 11195392) {
+                unColoredPoints.push(point);
+            }
+        }
+
+        return unColoredPoints;
     }
 }
