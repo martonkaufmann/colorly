@@ -2,7 +2,7 @@ import Phaser from "phaser";
 
 export default class StartGame extends Phaser.Scene {
     #backgroundImages = {
-        "start-play-bg-apple": "public/assets/apple_outline_white.png",
+        "start-play-bg-apple": "public/assets/apple_outline_white.svg",
         "start-play-bg-banan": "public/assets/banana_outline_white.png",
         "start-play-bg-pear": "public/assets/pear_outline_white.png",
         "start-play-bg-grapges": "public/assets/grapes_outline_white.png",
@@ -51,7 +51,7 @@ export default class StartGame extends Phaser.Scene {
         playButtonImage.setInteractive();
         playButtonImage.scale = 0.08;
         playButtonImage.on("pointerdown", () => {
-            this.scene.start("Color");
+            this.scene.start("Color", {"asset": "strawberry"});
         });
     }
 }

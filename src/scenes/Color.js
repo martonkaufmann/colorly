@@ -10,11 +10,7 @@ export default class Color extends Phaser.Scene {
     /** @type Phaser.GameObjects.Layer */
     #backgroundLayer;
 
-    #assets = {
-        "strawberry-filled": "public/assets/strawberry_filled.svg",
-        "strawberry-outline": "public/assets/strawberry_outline.svg",
-        "strawberry-outline-white": "public/assets/strawberry_outline_white.svg",
-    };
+    #asset = "";
 
     get #REFERENCE_COLOR() {
         return 11195392;
@@ -24,12 +20,16 @@ export default class Color extends Phaser.Scene {
         super("Color");
     }
 
-    preload() {
-        for (const [name, path] of Object.entries(this.#assets)) {
-            this.load.svg(name, path);
-        }
+    init({asset}) {
+        this.#asset = asset
+    }
 
-        this.load.image("strawberry", "public/assets/strawberry.png");
+    preload() {
+        this.load.svg(`${this.#asset}-filled`, `public/assets/${this.#asset}-filled.svg`);
+        this.load.svg(`${this.#asset}-outline`, `public/assets/${this.#asset}-outline.svg`);
+        this.load.svg(`${this.#asset}-outline-white`, `public/assets/${this.#asset}-outline-white.svg`);
+
+        this.load.image(this.#asset, `public/assets/${this.#asset}.png`);
         this.load.image("brush", "public/assets/brush.png");
 
         this.load.audio("strawberry", [
@@ -87,12 +87,13 @@ export default class Color extends Phaser.Scene {
                     this,
                     window.innerWidth / 2,
                     window.innerHeight / 2,
-                    "strawberry",
+                    this.#asset,
                 );
 
                 this.#uiLayer.add(image);
                 this.#drawingLayer.remove(itemMaskedImage);
                 this.#uiLayer.remove(itemOutlineImage);
+                this.textures.remove("c")
 
                 this.tweens.add({
                     targets: image,
@@ -101,6 +102,9 @@ export default class Color extends Phaser.Scene {
                         scaleX: { value: 1.05, duration: 1000, yoyo: true },
                         scaleY: { value: 1.05, duration: 1000, yoyo: true },
                     },
+                    onComplete: () => {
+                    this.scene.start("Color", {"asset": "apple"});
+                    }
                 });
             }
         });
@@ -114,7 +118,7 @@ export default class Color extends Phaser.Scene {
 
         // TODO: Group creates it's own layer, handle this
         const backgroundImageGroup = new Phaser.GameObjects.Group(this, {
-            key: "strawberry-outline-white",
+            key: `${this.#asset}-outline-white`,
             repeat: horizontalCount * verticalCount,
             setOrigin: {
                 x: 0,
@@ -138,7 +142,7 @@ export default class Color extends Phaser.Scene {
     }
 
     #createItemNameText() {
-        const name = i18next.t("strawberry");
+        const name = i18next.t(this.#asset);
         const text = new Phaser.GameObjects.Text(this, 0, 0, name.toUpperCase(), {
             fontSize: "48px",
             fontStyle: "900",
@@ -158,14 +162,14 @@ export default class Color extends Phaser.Scene {
             this,
             window.innerWidth / 2,
             window.innerHeight / 2,
-            "strawberry-outline",
+            `${this.#asset}-outline`,
         );
 
         return image;
     }
 
     #createItemImage() {
-        const image = new Phaser.GameObjects.Image(this, window.innerWidth / 2, window.innerHeight / 2, "strawberry");
+        const image = new Phaser.GameObjects.Image(this, window.innerWidth / 2, window.innerHeight / 2, this.#asset);
         const renderTexture = new Phaser.GameObjects.RenderTexture(
             this,
             window.innerWidth / 2,
@@ -178,7 +182,7 @@ export default class Color extends Phaser.Scene {
 
         let canvasTexture = this.textures.createCanvas("c", window.innerWidth, window.innerHeight);
         canvasTexture = canvasTexture.drawFrame(
-            "strawberry-filled",
+            `${this.#asset}-filled`,
             undefined,
             ((image.displayWidth - window.innerWidth) / 2) * -1,
             ((image.displayHeight - window.innerHeight) / 2) * -1,
