@@ -9,8 +9,10 @@ export default class Color extends Phaser.Scene {
     #uiLayer;
     /** @type Phaser.GameObjects.Layer */
     #backgroundLayer;
-
+    /** @type string[] */
     #assets;
+    /** @type int */
+    #imageScale;
 
     get #REFERENCE_COLOR() {
         return 11195392;
@@ -22,12 +24,19 @@ export default class Color extends Phaser.Scene {
 
     init(assets) {
         this.#assets = assets;
+        this.#imageScale = window.innerWidth / IMAGE_SIZE;
     }
 
     preload() {
-        this.load.svg(`${this.#assets[0]}-filled`, `public/assets/${this.#assets[0]}-filled.svg`);
-        this.load.svg(`${this.#assets[0]}-outline`, `public/assets/${this.#assets[0]}-outline.svg`);
-        this.load.svg(`${this.#assets[0]}-outline-white`, `public/assets/${this.#assets[0]}-outline-white.svg`);
+        this.load.svg(`${this.#assets[0]}-filled`, `public/assets/${this.#assets[0]}-filled.svg`, {
+            scale: this.#imageScale,
+        });
+        this.load.svg(`${this.#assets[0]}-outline`, `public/assets/${this.#assets[0]}-outline.svg`, {
+            scale: this.#imageScale,
+        });
+        this.load.svg(`${this.#assets[0]}-outline-white`, `public/assets/${this.#assets[0]}-outline-white.svg`, {
+            scale: this.#imageScale,
+        });
 
         this.load.image(this.#assets[0], `public/assets/${this.#assets[0]}.png`);
         this.load.image("brush", "public/assets/brush.png");
@@ -79,13 +88,15 @@ export default class Color extends Phaser.Scene {
         this.input.on("pointerup", () => {
             pointsToColor = this.#getUnColoredPoints(itemImageReferenceTexture, pointsToColor);
 
-            if ((totalPointsToColorCount / 100) * 2 >= pointsToColor.length) {
+            // 75% of the image has to be colored
+            if ((totalPointsToColorCount / 100) * 25 >= pointsToColor.length) {
                 const image = new Phaser.GameObjects.Image(
                     this,
                     window.innerWidth / 2,
                     window.innerHeight / 2,
                     this.#assets[0],
                 );
+                image.scale = this.#imageScale;
 
                 this.#uiLayer.add(image);
                 this.#drawingLayer.remove(itemMaskedImage);
@@ -96,8 +107,8 @@ export default class Color extends Phaser.Scene {
                     targets: image,
                     ease: "Linear",
                     props: {
-                        scaleX: { value: 1.05, duration: 1000, yoyo: true },
-                        scaleY: { value: 1.05, duration: 1000, yoyo: true },
+                        scaleX: { value: this.#imageScale + 0.05, duration: 1000, yoyo: true },
+                        scaleY: { value: this.#imageScale + 0.05, duration: 1000, yoyo: true },
                     },
                     onComplete: () => {
                         const assets = this.#assets;
@@ -176,6 +187,8 @@ export default class Color extends Phaser.Scene {
             window.innerHeight / 2,
             this.#assets[0],
         );
+        image.scale = this.#imageScale;
+
         const renderTexture = new Phaser.GameObjects.RenderTexture(
             this,
             window.innerWidth / 2,
