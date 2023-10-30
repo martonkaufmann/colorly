@@ -51,21 +51,23 @@ export default class StartGame extends Phaser.Scene {
         playButtonImage.setInteractive();
         playButtonImage.scale = 0.08;
         playButtonImage.on("pointerdown", () => {
-            this.scene.start("Color", [
-                "apple",
-                "banana",
-                "carrot",
-                "cauliflower",
-                "strawberry",
-                "corn",
-                "grapes",
-                "mushroom",
-                "orange",
-                "pear",
-                "peas",
-                "pineapple",
-                "plum",
-            ]);
+            this.scene.start("Color", {
+                assets: [
+                    "apple",
+                    "banana",
+                    "carrot",
+                    "cauliflower",
+                    "strawberry",
+                    "corn",
+                    "grapes",
+                    "mushroom",
+                    "orange",
+                    "pear",
+                    "peas",
+                    "pineapple",
+                    "plum",
+                ],
+            });
         });
     }
 }

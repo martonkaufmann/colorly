@@ -22,7 +22,7 @@ export default class Color extends Phaser.Scene {
         super("Color");
     }
 
-    init(assets) {
+    init({ assets }) {
         this.#assets = assets;
         this.#imageScale = window.innerWidth / IMAGE_SIZE;
     }
@@ -42,9 +42,16 @@ export default class Color extends Phaser.Scene {
         this.load.image("brush", "public/assets/brush.png");
 
         this.load.audio(this.#assets[0], [`public/assets/audio/hu/${this.#assets[0]}.mp3`]);
+        if (null === this.sound.get("background")) {
+            this.load.audio("background", ["public/assets/music/background.ogg"]);
+        }
     }
 
     create() {
+        if (null === this.sound.get("background")) {
+            this.sound.add("background").play({ loop: true });
+        }
+
         this.#backgroundLayer = this.add.layer();
         this.#drawingLayer = this.add.layer();
         this.#uiLayer = this.add.layer();
@@ -115,7 +122,7 @@ export default class Color extends Phaser.Scene {
 
                         assets.push(assets.shift());
 
-                        this.scene.start("Color", assets);
+                        this.scene.start("Color", { assets });
                     },
                 });
             }
