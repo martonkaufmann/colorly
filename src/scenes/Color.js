@@ -22,6 +22,10 @@ export default class Color extends Phaser.Scene {
         super("Color");
     }
 
+    /**
+     * @param {Object} obj
+     * @param {string[]} obj.assets
+     */
     init({ assets }) {
         this.#assets = assets;
         this.#imageScale = window.innerWidth / IMAGE_SIZE;
@@ -39,17 +43,31 @@ export default class Color extends Phaser.Scene {
         });
 
         this.load.image(this.#assets[0], `public/assets/${this.#assets[0]}.png`);
-        this.load.image("brush", "public/assets/brush.png");
 
         this.load.audio(this.#assets[0], [`public/assets/audio/hu/${this.#assets[0]}.mp3`]);
+
+        if (false === this.textures.exists("star")) {
+            this.load.image("star", "public/assets/star.png");
+        }
+
+        if (false === this.textures.exists("brush")) {
+            this.load.image("brush", "public/assets/brush.png");
+        }
+
         if (null === this.sound.get("background")) {
             this.load.audio("background", ["public/assets/music/background.ogg"]);
+        }
+
+        if (null === this.sound.get("hooray")) {
+            this.load.audio("hooray", ["public/assets/audio/hooray.ogg"]);
         }
     }
 
     create() {
-        if (null === this.sound.get("background")) {
-            this.sound.add("background").play({ loop: true });
+        if (this.sound.get('background') === null) {
+            const backgroundMusic = this.sound.add("background");
+            backgroundMusic.setVolume(0.6);
+            backgroundMusic.play({ loop: true });
         }
 
         this.#backgroundLayer = this.add.layer();
@@ -110,6 +128,15 @@ export default class Color extends Phaser.Scene {
                 this.#uiLayer.remove(itemOutlineImage);
                 this.textures.remove("c");
 
+                this.sound.add("hooray").play();
+                this.add.particles(0, 0, "star", {
+                    lifespan: 3500,
+                    angle: 90,
+                    x: { min: 0, max: window.innerWidth },
+                    y: { start: 0, end: window.innerHeight * 1.1 },
+                    scale: 0.1,
+                    frequency: 200,
+                });
                 this.tweens.add({
                     targets: image,
                     ease: "Linear",
@@ -117,14 +144,15 @@ export default class Color extends Phaser.Scene {
                         scaleX: { value: this.#imageScale + 0.05, duration: 1000, yoyo: true },
                         scaleY: { value: this.#imageScale + 0.05, duration: 1000, yoyo: true },
                     },
-                    onComplete: () => {
-                        const assets = this.#assets;
-
-                        assets.push(assets.shift());
-
-                        this.scene.start("Color", { assets });
-                    },
                 });
+
+                setTimeout(() => {
+                    const assets = this.#assets;
+
+                    assets.push(assets.shift());
+
+                    this.scene.start("Color", { assets });
+                }, 5000);
             }
         });
     }
