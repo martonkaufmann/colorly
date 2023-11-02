@@ -32,34 +32,34 @@ export default class Color extends Phaser.Scene {
     }
 
     preload() {
-        this.load.svg(`${this.#assets[0]}-filled`, `assets/${this.#assets[0]}-filled.svg`, {
+        this.load.svg(`${this.#assets[0]}-filled`, `${this.#assets[0]}-filled.svg`, {
             scale: this.#imageScale,
         });
-        this.load.svg(`${this.#assets[0]}-outline`, `assets/${this.#assets[0]}-outline.svg`, {
+        this.load.svg(`${this.#assets[0]}-outline`, `${this.#assets[0]}-outline.svg`, {
             scale: this.#imageScale,
         });
-        this.load.svg(`${this.#assets[0]}-outline-white`, `assets/${this.#assets[0]}-outline-white.svg`, {
+        this.load.svg(`${this.#assets[0]}-outline-white`, `${this.#assets[0]}-outline-white.svg`, {
             scale: this.#imageScale,
         });
 
-        this.load.image(this.#assets[0], `assets/${this.#assets[0]}.png`);
+        this.load.image(this.#assets[0], `${this.#assets[0]}.png`);
 
-        this.load.audio(this.#assets[0], [`assets/audio/hu/${this.#assets[0]}.mp3`]);
+        this.load.audio(this.#assets[0], [`audio/hu/${this.#assets[0]}.mp3`]);
 
         if (false === this.textures.exists("star")) {
-            this.load.image("star", "assets/star.png");
+            this.load.image("star", "star.png");
         }
 
         if (false === this.textures.exists("brush")) {
-            this.load.image("brush", "assets/brush.png");
+            this.load.image("brush", "brush.png");
         }
 
         if (null === this.sound.get("background")) {
-            this.load.audio("background", ["assets/music/background.ogg"]);
+            this.load.audio("background", ["music/background.ogg"]);
         }
 
         if (null === this.sound.get("hooray")) {
-            this.load.audio("hooray", ["assets/audio/hooray.ogg"]);
+            this.load.audio("hooray", ["audio/hooray.ogg"]);
         }
     }
 
@@ -67,7 +67,7 @@ export default class Color extends Phaser.Scene {
         if (this.sound.get("background") === null) {
             const backgroundMusic = this.sound.add("background");
             backgroundMusic.setVolume(0.6);
-            backgroundMusic.play({ loop: true });
+            //            backgroundMusic.play({ loop: true });
         }
 
         this.#backgroundLayer = this.add.layer();
@@ -189,7 +189,7 @@ export default class Color extends Phaser.Scene {
     }
 
     #createItemNameText() {
-        const name = i18next.t(this.#assets[0]);
+        const name = i18next.t(this.#assets[0].replaceAll("/", "."));
         const text = new Phaser.GameObjects.Text(this, 0, 0, name.toUpperCase(), {
             fontSize: "48px",
             fontStyle: "900",

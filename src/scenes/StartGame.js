@@ -2,14 +2,14 @@ import Phaser from "phaser";
 
 export default class StartGame extends Phaser.Scene {
     #backgroundImages = {
-        "start-play-bg-apple": "assets/apple-outline-white.svg",
-        "start-play-bg-banan": "assets/banana-outline-white.svg",
-        "start-play-bg-pear": "assets/pear-outline-white.svg",
-        "start-play-bg-grapges": "assets/grapes-outline-white.svg",
-        "start-play-bg-mushroom": "assets/mushroom-outline-white.svg",
-        "start-play-bg-strawberry": "assets/strawberry-outline-white.svg",
-        "start-play-bg-pineapple": "assets/pineapple-outline-white.svg",
-        "start-play-bg-corn": "assets/corn-outline-white.svg",
+        "start-play-bg-apple": "coloring/fruits/apple-outline-white.svg",
+        "start-play-bg-banan": "coloring/fruits/banana-outline-white.svg",
+        "start-play-bg-pear": "coloring/fruits/pear-outline-white.svg",
+        "start-play-bg-grapges": "coloring/fruits/grapes-outline-white.svg",
+        "start-play-bg-mushroom": "coloring/fruits/mushroom-outline-white.svg",
+        "start-play-bg-strawberry": "coloring/fruits/strawberry-outline-white.svg",
+        "start-play-bg-pineapple": "coloring/fruits/pineapple-outline-white.svg",
+        "start-play-bg-corn": "coloring/fruits/corn-outline-white.svg",
     };
 
     constructor() {
@@ -17,7 +17,7 @@ export default class StartGame extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image("start-play", "assets/play.png");
+        this.load.image("start-play", "play.png");
 
         for (const [name, image] of Object.entries(this.#backgroundImages)) {
             this.load.svg(name, image);
@@ -53,19 +53,19 @@ export default class StartGame extends Phaser.Scene {
         playButtonImage.on("pointerdown", () => {
             this.scene.start("Color", {
                 assets: [
-                    "apple",
-                    "banana",
-                    "carrot",
-                    "cauliflower",
-                    "strawberry",
-                    "corn",
-                    "grapes",
-                    "mushroom",
-                    "orange",
-                    "pear",
-                    "peas",
-                    "pineapple",
-                    "plum",
+                    "coloring/fruits/apple",
+                    "coloring/fruits/banana",
+                    "coloring/fruits/carrot",
+                    "coloring/fruits/cauliflower",
+                    "coloring/fruits/strawberry",
+                    "coloring/fruits/corn",
+                    "coloring/fruits/grapes",
+                    "coloring/fruits/mushroom",
+                    "coloring/fruits/orange",
+                    "coloring/fruits/pear",
+                    "coloring/fruits/peas",
+                    "coloring/fruits/pineapple",
+                    "coloring/fruits/plum",
                 ],
             });
         });

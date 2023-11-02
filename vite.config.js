@@ -1,11 +1,11 @@
 import { defineConfig } from "vite";
 
-export default defineConfig(({command, mode, ssrBuild}) => {
+export default defineConfig(({ command, mode, ssrBuild }) => {
     if (command === "build") {
         return {
-            base: "/colorly/"
-        }
+            base: "/colorly/",
+        };
     }
 
-    return {}
-})
+    return {};
+});
