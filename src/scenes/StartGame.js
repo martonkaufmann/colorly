@@ -2,14 +2,14 @@ import Phaser from "phaser";
 
 export default class StartGame extends Phaser.Scene {
     #backgroundImages = {
-        "start-play-bg-apple": "public/assets/apple-outline-white.svg",
-        "start-play-bg-banan": "public/assets/banana-outline-white.svg",
-        "start-play-bg-pear": "public/assets/pear-outline-white.svg",
-        "start-play-bg-grapges": "public/assets/grapes-outline-white.svg",
-        "start-play-bg-mushroom": "public/assets/mushroom-outline-white.svg",
-        "start-play-bg-strawberry": "public/assets/strawberry-outline-white.svg",
-        "start-play-bg-pineapple": "public/assets/pineapple-outline-white.svg",
-        "start-play-bg-corn": "public/assets/corn-outline-white.svg",
+        "start-play-bg-apple": "assets/apple-outline-white.svg",
+        "start-play-bg-banan": "assets/banana-outline-white.svg",
+        "start-play-bg-pear": "assets/pear-outline-white.svg",
+        "start-play-bg-grapges": "assets/grapes-outline-white.svg",
+        "start-play-bg-mushroom": "assets/mushroom-outline-white.svg",
+        "start-play-bg-strawberry": "assets/strawberry-outline-white.svg",
+        "start-play-bg-pineapple": "assets/pineapple-outline-white.svg",
+        "start-play-bg-corn": "assets/corn-outline-white.svg",
     };
 
     constructor() {
@@ -17,7 +17,7 @@ export default class StartGame extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image("start-play", "public/assets/play.png");
+        this.load.image("start-play", "assets/play.png");
 
         for (const [name, image] of Object.entries(this.#backgroundImages)) {
             this.load.svg(name, image);
