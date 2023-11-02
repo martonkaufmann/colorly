@@ -1,5 +1,7 @@
 {
     "name": "Colorly",
+    "start_url": "https://martonkaufmann.github.io/colorly/",
+    "display": "standalone",
     "icons": [
         {
             "src": "/assets/logo/512.png",
