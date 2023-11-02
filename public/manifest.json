@@ -1,0 +1,10 @@
+{
+    "name": "Colorly",
+    "icons": [
+        {
+            "src": "/assets/logo/512.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ]
+}
