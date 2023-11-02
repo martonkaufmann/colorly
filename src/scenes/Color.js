@@ -67,7 +67,7 @@ export default class Color extends Phaser.Scene {
         if (this.sound.get("background") === null) {
             const backgroundMusic = this.sound.add("background");
             backgroundMusic.setVolume(0.6);
-            //            backgroundMusic.play({ loop: true });
+            backgroundMusic.play({ loop: true });
         }
 
         this.#backgroundLayer = this.add.layer();
