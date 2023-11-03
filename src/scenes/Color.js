@@ -44,7 +44,7 @@ export default class Color extends Phaser.Scene {
 
         this.load.image(this.#assets[0], `${this.#assets[0]}.png`);
 
-        this.load.audio(this.#assets[0], [`audio/hu/${this.#assets[0]}.mp3`]);
+        this.load.audio(this.#assets[0], [`audio/hu/${this.#assets[0]}.ogg`]);
 
         if (false === this.textures.exists("star")) {
             this.load.image("star", "star.png");
