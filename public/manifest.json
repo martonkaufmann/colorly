@@ -3,7 +3,7 @@
     "start_url": "https://martonkaufmann.github.io/colorly/",
     "background_color": "#fff7b4",
     "theme_color": "#fff7b4",
-    "display": "standalone",
+    "display": "fullscreen",
     "icons": [
         {
             "src": "/logo_512.png",
