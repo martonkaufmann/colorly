@@ -112,8 +112,8 @@ export default class Color extends Phaser.Scene {
         this.input.on("pointerup", () => {
             pointsToColor = this.#getUnColoredPoints(itemImageReferenceTexture, pointsToColor);
 
-            // 75% of the image has to be colored
-            if ((totalPointsToColorCount / 100) * 25 < pointsToColor.length) {
+            // 98% of the image has to be colored
+            if ((totalPointsToColorCount / 100) * 2 < pointsToColor.length) {
                 return;
             }
 
