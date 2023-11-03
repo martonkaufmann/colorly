@@ -76,7 +76,7 @@ export default class Color extends Phaser.Scene {
 
         const background = this.#createBackground();
         const itemOutlineImage = this.#createItemOutlineImage();
-        const itemNameText = this.#createItemNameText();
+        const { text: itemNameText, audio: itemNameAudio } = this.#createItemNameText();
         const {
             renderTexture: itemImageDrawingTexture,
             image: itemMaskedImage,
@@ -95,7 +95,7 @@ export default class Color extends Phaser.Scene {
 
         itemNameText.on("pointerdown", () => {
             // TODO: Inspect if it can be done better
-            this.sound.add(this.#assets[0]).play();
+            itemNameAudio.play();
         });
 
         this.input.on("pointermove", (pointer) => {
@@ -189,6 +189,7 @@ export default class Color extends Phaser.Scene {
     }
 
     #createItemNameText() {
+        const audio = this.sound.add(this.#assets[0]);
         const name = i18next.t(this.#assets[0].replaceAll("/", "."));
         const text = new Phaser.GameObjects.Text(this, 0, 0, name.toUpperCase(), {
             fontSize: "48px",
@@ -201,7 +202,7 @@ export default class Color extends Phaser.Scene {
         text.setX(window.innerWidth / 2 - text.displayWidth / 2);
         text.setY(text.displayHeight - 20);
 
-        return text;
+        return { text, audio };
     }
 
     #createItemOutlineImage() {

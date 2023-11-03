@@ -20,7 +20,7 @@ const game = new Phaser.Game({
     height: window.innerHeight,
     scene: [StartGame, Color],
     audio: {
-//        disableWebAudio: true,
+        //        disableWebAudio: true,
     },
     backgroundColor: "#fff7b4",
 });
