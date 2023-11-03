@@ -79,7 +79,7 @@ export default class StartGame extends Phaser.Scene {
                     "coloring/critters/scorpion",
                     "coloring/critters/snail",
                     "coloring/critters/spider",
-                    "coloring/crittersa/worm",
+                    "coloring/critters/worm",
                 ],
             });
         });
