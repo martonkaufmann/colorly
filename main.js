@@ -16,7 +16,7 @@ i18next.init({
         en: { translation: en },
         hu: { translation: hu },
     },
-});
+})
 
 const game = new Phaser.Game({
     type: Phaser.AUTO,
@@ -28,3 +28,8 @@ const game = new Phaser.Game({
     },
     backgroundColor: "#fff7b4",
 });
+
+window.addEventListener("resize", () => {
+    game.scale.resize(window.innerWidth, window.innerHeight)
+});
+
