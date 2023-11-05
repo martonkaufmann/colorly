@@ -6,7 +6,7 @@ import en from "./src/translations/en";
 import hu from "./src/translations/hu";
 
 if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/serviceWorker.js");
+    navigator.serviceWorker.register(`${import.meta.env.BASE_URL}serviceWorker.js`);
 }
 
 i18next.init({
