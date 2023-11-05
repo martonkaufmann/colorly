@@ -5,6 +5,10 @@ import i18next from "i18next";
 import en from "./src/translations/en";
 import hu from "./src/translations/hu";
 
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/serviceWorker.js");
+}
+
 i18next.init({
     lng: "hu", // if you're using a language detector, do not define the lng option
     debug: true,
