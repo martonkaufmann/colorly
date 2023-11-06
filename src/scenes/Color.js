@@ -117,49 +117,58 @@ export default class Color extends Phaser.Scene {
                 return;
             }
 
-            this.input.off("pointermove");
-            this.input.off("pointerup");
-            this.input.off("pointerdown");
-
-            const image = new Phaser.GameObjects.Image(
-                this,
-                window.innerWidth / 2,
-                window.innerHeight / 2,
-                this.#assets[0],
-            );
-            image.scale = this.#imageScale;
-
-            this.#uiLayer.add(image);
-            this.#drawingLayer.remove(itemMaskedImage);
-            this.#uiLayer.remove(itemOutlineImage);
-            this.textures.remove("c");
-
-            this.sound.add("hooray").play();
-            this.add.particles(0, 0, "star", {
-                lifespan: 3500,
-                angle: 90,
-                x: { min: 0, max: window.innerWidth },
-                y: { start: 0, end: window.innerHeight * 1.1 },
-                scale: 0.1,
-                frequency: 200,
-            });
-            this.tweens.add({
-                targets: image,
-                ease: "Linear",
-                props: {
-                    scaleX: { value: this.#imageScale + 0.05, duration: 1000, yoyo: true },
-                    scaleY: { value: this.#imageScale + 0.05, duration: 1000, yoyo: true },
-                },
-            });
-
-            setTimeout(() => {
-                const assets = this.#assets;
-
-                assets.push(assets.shift());
-
-                this.scene.start("Color", { assets });
-            }, 5000);
+            this.#onComplete(itemMaskedImage, itemOutlineImage);
         });
+    }
+
+    /**
+     * TODO: Is this nonsense?
+     * @param {Phaser.GameObjects.Image} itemMaskedImage
+     * @param {Phaser.GameObjects.Image} itemOutlineImage
+     */
+    #onComplete(itemMaskedImage, itemOutlineImage) {
+        this.input.off("pointermove");
+        this.input.off("pointerup");
+        this.input.off("pointerdown");
+
+        const image = new Phaser.GameObjects.Image(
+            this,
+            window.innerWidth / 2,
+            window.innerHeight / 2,
+            this.#assets[0],
+        );
+        image.scale = this.#imageScale;
+
+        this.#uiLayer.add(image);
+        this.#drawingLayer.remove(itemMaskedImage);
+        this.#uiLayer.remove(itemOutlineImage);
+        this.textures.remove("c");
+
+        this.sound.add("hooray").play();
+        this.add.particles(0, 0, "star", {
+            lifespan: 3500,
+            angle: 90,
+            x: { min: 0, max: window.innerWidth },
+            y: { start: 0, end: window.innerHeight * 1.1 },
+            scale: 0.1,
+            frequency: 200,
+        });
+        this.tweens.add({
+            targets: image,
+            ease: "Linear",
+            props: {
+                scaleX: { value: this.#imageScale + 0.05, duration: 1000, yoyo: true },
+                scaleY: { value: this.#imageScale + 0.05, duration: 1000, yoyo: true },
+            },
+        });
+
+        setTimeout(() => {
+            const assets = this.#assets;
+
+            assets.push(assets.shift());
+
+            this.scene.start("Color", { assets });
+        }, 5000);
     }
 
     #createBackground() {
