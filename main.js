@@ -5,7 +5,9 @@ import i18next from "i18next";
 import en from "./src/translations/en";
 import hu from "./src/translations/hu";
 
-if ("serviceWorker" in navigator) {
+alert(JSON.stringify(import.meta.env));
+
+if ("serviceWorker" in navigator && import.meta.env.PROD) {
     navigator.serviceWorker.register(`${import.meta.env.BASE_URL}serviceWorker.js`);
 }
 
@@ -16,20 +18,16 @@ i18next.init({
         en: { translation: en },
         hu: { translation: hu },
     },
-})
+});
 
 const game = new Phaser.Game({
     type: Phaser.AUTO,
     width: window.innerWidth,
     height: window.innerHeight,
     scene: [StartGame, Color],
-    audio: {
-        //        disableWebAudio: true,
-    },
     backgroundColor: "#fff7b4",
 });
 
 window.addEventListener("resize", () => {
-    game.scale.resize(window.innerWidth, window.innerHeight)
+    game.scale.resize(window.innerWidth, window.innerHeight);
 });
-
