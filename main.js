@@ -20,7 +20,7 @@ i18next.init({
 
 window.addEventListener("load", () => {
     const game = new Phaser.Game({
-        type: Phaser.AUTO,
+        type: Phaser.WEBGL,
         width: window.innerWidth,
         height: window.innerHeight,
         scene: [StartGame, Color],
