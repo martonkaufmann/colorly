@@ -18,14 +18,50 @@ i18next.init({
     },
 });
 
-const game = new Phaser.Game({
-    type: Phaser.AUTO,
-    width: window.innerWidth,
-    height: window.innerHeight,
-    scene: [StartGame, Color],
-    backgroundColor: "#fff7b4",
+window.addEventListener("load", () => {
+    const game = new Phaser.Game({
+        type: Phaser.AUTO,
+        width: window.innerWidth,
+        height: window.innerHeight,
+        /*
+    scale: {
+        mode: Phaser.Scale.RESIZE,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        autoRound: false,
+        zoom:1,
+    },
+    */
+        scene: [StartGame, Color],
+        backgroundColor: "#fff7b4",
+    });
 });
 
+/*
 window.addEventListener("resize", () => {
-    game.scale.resize(window.innerWidth, window.innerHeight);
+    console.log('resize start')
+    
+    console.log(
+        window.innerWidth,
+        window.innerHeight,
+        game.config.width,
+        game.config.height,
+        game.canvas.style.width,
+        game.canvas.style.height
+    )
+
+
+    window.setTimeout(() => {
+    game.scale.resize(
+        window.innerWidth, 
+        window.innerHeight
+    );
+    game.canvas.style.width = `${window.innerWidth}px`
+    game.canvas.style.height= `${window.innerHeight}px`
+        game.config.width = window.innerWidth
+        game.config.height = window.innerHeight
+
+        console.log('resized')
+    }, 2000)
+    
 });
+*/
