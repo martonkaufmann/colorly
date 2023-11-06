@@ -5,8 +5,6 @@ import i18next from "i18next";
 import en from "./src/translations/en";
 import hu from "./src/translations/hu";
 
-alert(JSON.stringify(import.meta.env));
-
 if ("serviceWorker" in navigator && import.meta.env.PROD) {
     navigator.serviceWorker.register(`${import.meta.env.BASE_URL}serviceWorker.js`);
 }
