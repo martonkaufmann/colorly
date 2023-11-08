@@ -237,7 +237,8 @@ export default class Color extends Phaser.Scene {
             window.innerHeight / 2,
             this.#assets[0],
         );
-        image.scale = this.#imageScale;
+        image.displayWidth = image.width * this.#imageScale;
+        image.displayHeight = image.height * this.#imageScale;
 
         const renderTexture = new Phaser.GameObjects.RenderTexture(
             this,
