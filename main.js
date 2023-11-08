@@ -28,6 +28,3 @@ window.addEventListener("load", () => {
     });
 });
 
-window.addEventListener("resize", () => {
-    alert("window resized")
-})
