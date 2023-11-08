@@ -93,6 +93,7 @@ export default class Color extends Phaser.Scene {
         this.#uiLayer.add(itemOutlineImage);
         this.#uiLayer.add(itemNameText);
 
+
         itemNameText.on("pointerdown", () => {
             itemNameAudio.play();
         });
@@ -117,7 +118,7 @@ export default class Color extends Phaser.Scene {
                 return;
             }
 
-            this.#onComplete(itemMaskedImage, itemOutlineImage);
+            this.#onComplete(itemMaskedImage, itemOutlineImage, itemImageReferenceTexture);
         });
     }
 
@@ -125,8 +126,9 @@ export default class Color extends Phaser.Scene {
      * TODO: Is this nonsense?
      * @param {Phaser.GameObjects.Image} itemMaskedImage
      * @param {Phaser.GameObjects.Image} itemOutlineImage
+     * @param {Phaser.Textures.CanvasTexture} itemImageReferenceTexture
      */
-    #onComplete(itemMaskedImage, itemOutlineImage) {
+    #onComplete(itemMaskedImage, itemOutlineImage, itemImageReferenceTexture) {
         this.input.off("pointermove");
         this.input.off("pointerup");
         this.input.off("pointerdown");
@@ -140,9 +142,9 @@ export default class Color extends Phaser.Scene {
         image.scale = this.#imageScale;
 
         this.#uiLayer.add(image);
+        itemImageReferenceTexture.destroy()
         this.#drawingLayer.remove(itemMaskedImage);
         this.#uiLayer.remove(itemOutlineImage);
-        this.textures.remove("c");
 
         this.sound.add("hooray").play();
         this.add.particles(0, 0, "star", {
@@ -237,8 +239,7 @@ export default class Color extends Phaser.Scene {
             window.innerHeight / 2,
             this.#assets[0],
         );
-        image.displayWidth = image.width * this.#imageScale;
-        image.displayHeight = image.height * this.#imageScale;
+        image.scale = this.#imageScale;
 
         const renderTexture = new Phaser.GameObjects.RenderTexture(
             this,
