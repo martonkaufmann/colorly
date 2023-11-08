@@ -27,3 +27,7 @@ window.addEventListener("load", () => {
         backgroundColor: "#fff7b4",
     });
 });
+
+window.addEventListener("resize", () => {
+    alert("window resized")
+})
