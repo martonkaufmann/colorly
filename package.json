@@ -15,6 +15,6 @@
     },
     "dependencies": {
         "i18next": "^23.5.1",
-        "phaser": "github:martonkaufmann/phaser#v3.60.0-bitmask-fix"
+        "phaser": "github:photonstorm/phaser#master"
     }
 }

@@ -3,12 +3,6 @@ import { BACKGROUND_IMAGE_SIZE_DIVIDER, IMAGE_SIZE } from "../constants";
 import i18next from "i18next";
 
 export default class Color extends Phaser.Scene {
-    /** @type Phaser.GameObjects.Layer */
-    #drawingLayer;
-    /** @type Phaser.GameObjects.Layer */
-    #uiLayer;
-    /** @type Phaser.GameObjects.Layer */
-    #backgroundLayer;
     /** @type string[] */
     #assets;
     /** @type int */
@@ -67,33 +61,22 @@ export default class Color extends Phaser.Scene {
         if (this.sound.get("background") === null) {
             const backgroundMusic = this.sound.add("background");
             backgroundMusic.setVolume(0.6);
-            backgroundMusic.play({ loop: true });
+            //backgroundMusic.play({ loop: true });
         }
 
-        this.#backgroundLayer = this.add.layer();
-        this.#drawingLayer = this.add.layer();
-        this.#uiLayer = this.add.layer();
-
         const background = this.#createBackground();
-        const itemOutlineImage = this.#createItemOutlineImage();
-        const { text: itemNameText, audio: itemNameAudio } = this.#createItemNameText();
         const {
             renderTexture: itemImageDrawingTexture,
             image: itemMaskedImage,
             canvasTexture: itemImageReferenceTexture,
         } = this.#createItemImage();
+        const itemOutlineImage = this.#createItemOutlineImage();
+        const { text: itemNameText, audio: itemNameAudio } = this.#createItemNameText();
         let pointsToColor = this.#getPointsToColor(itemImageReferenceTexture);
         const totalPointsToColorCount = pointsToColor.length;
 
-        for (const image of background.getChildren()) {
-            this.#backgroundLayer.add(image);
-        }
-
-        this.#drawingLayer.add(itemMaskedImage);
-        this.#uiLayer.add(itemOutlineImage);
-        this.#uiLayer.add(itemNameText);
-
-        itemImageDrawingTexture.resize(window.innerWidth, window.innerHeight)
+        // TODO: Remove resize later
+        itemImageDrawingTexture.resize(window.innerWidth, window.innerHeight);
 
         itemNameText.on("pointerdown", () => {
             itemNameAudio.play();
@@ -119,6 +102,9 @@ export default class Color extends Phaser.Scene {
                 return;
             }
 
+            console.log("complete");
+//            return;
+
             this.input.off("pointermove");
             this.input.off("pointerup");
             this.input.off("pointerdown");
@@ -133,6 +119,7 @@ export default class Color extends Phaser.Scene {
     }
 
     #onComplete() {
+        /*
         const image = new Phaser.GameObjects.Image(
             this,
             window.innerWidth / 2,
@@ -140,8 +127,15 @@ export default class Color extends Phaser.Scene {
             this.#assets[0],
         );
         image.scale = this.#imageScale;
+        */
+        const image = this.add.image(
+            window.innerWidth / 2,
+            window.innerHeight / 2,
+            this.#assets[0],
+        )
+        image.setScale(this.#imageScale)
 
-        this.#uiLayer.add(image);
+//        this.#uiLayer.add(image);
 
         this.sound.add("hooray").play();
         this.add.particles(0, 0, "star", {
@@ -176,8 +170,7 @@ export default class Color extends Phaser.Scene {
         const verticalCount = Math.ceil(window.innerHeight / backgroundImageSize);
         const horizontalCount = Math.ceil(window.innerWidth / backgroundImageSize);
 
-        // TODO: Group creates it's own layer, handle this
-        const backgroundImageGroup = new Phaser.GameObjects.Group(this, {
+        const backgroundImageGroup = this.add.group({
             key: `${this.#assets[0]}-outline-white`,
             repeat: horizontalCount * verticalCount,
             setOrigin: {
@@ -204,13 +197,14 @@ export default class Color extends Phaser.Scene {
     #createItemNameText() {
         const audio = this.sound.add(this.#assets[0]);
         const name = i18next.t(this.#assets[0].replaceAll("/", "."));
-        const text = new Phaser.GameObjects.Text(this, 0, 0, name.toUpperCase(), {
+        const text = this.add.text(0, 0, name.toUpperCase(), {
             fontSize: "48px",
             fontStyle: "900",
             fill: "#fff",
             stroke: "#000",
             strokeThickness: 3,
         });
+
         text.setInteractive();
         text.setX(window.innerWidth / 2 - text.displayWidth / 2);
         text.setY(text.displayHeight - 20);
@@ -219,34 +213,35 @@ export default class Color extends Phaser.Scene {
     }
 
     #createItemOutlineImage() {
-        const image = new Phaser.GameObjects.Image(
-            this,
-            window.innerWidth / 2,
-            window.innerHeight / 2,
-            `${this.#assets[0]}-outline`,
-        );
+        const image = this.add.image(window.innerWidth / 2, window.innerHeight / 2, `${this.#assets[0]}-outline`);
 
         return image;
     }
 
     #createItemImage() {
-        const image = new Phaser.GameObjects.Image(
-            this,
+  //      const container = this.add.container(window.innerWidth/2, window.innerHeight/2)
+
+        const renderTexture = this.add.renderTexture(
             window.innerWidth / 2,
             window.innerHeight / 2,
+//            window.innerWidth,
+//            window.innerHeight
+//            300,300
+            // TODO: Add texture height/width here and remove resize
+        );
+        renderTexture.setVisible(false)
+
+        const mask = renderTexture.createBitmapMask();
+
+        const image = this.add.image(
+            window.innerWidth/2, 
+            window.innerHeight/2, 
             this.#assets[0],
+//            add: false,
         );
-        image.scale = this.#imageScale;
-
-        const renderTexture = new Phaser.GameObjects.RenderTexture(
-            this,
-            window.innerWidth / 2,
-            window.innerHeight / 2,
-            window.innerWidth,
-            window.innerHeight,
-        );
-
-        image.setMask(renderTexture.createBitmapMask());
+        image.setScale(this.#imageScale)
+//        image.scale = this.#imageScale;
+        image.setMask(mask);
 
         let canvasTexture = this.textures.createCanvas("c", window.innerWidth, window.innerHeight);
         canvasTexture = canvasTexture.drawFrame(
@@ -255,6 +250,8 @@ export default class Color extends Phaser.Scene {
             ((image.displayWidth - window.innerWidth) / 2) * -1,
             ((image.displayHeight - window.innerHeight) / 2) * -1,
         );
+
+//        container.add([image, ])
 
         return { renderTexture, image, canvasTexture };
     }
