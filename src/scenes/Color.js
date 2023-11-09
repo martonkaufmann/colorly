@@ -93,6 +93,8 @@ export default class Color extends Phaser.Scene {
         this.#uiLayer.add(itemOutlineImage);
         this.#uiLayer.add(itemNameText);
 
+        itemImageDrawingTexture.resize(window.innerWidth, window.innerHeight)
+
         itemNameText.on("pointerdown", () => {
             itemNameAudio.play();
         });

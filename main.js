@@ -27,4 +27,3 @@ window.addEventListener("load", () => {
         backgroundColor: "#fff7b4",
     });
 });
-
