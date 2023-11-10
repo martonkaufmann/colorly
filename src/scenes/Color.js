@@ -64,14 +64,14 @@ export default class Color extends Phaser.Scene {
             //backgroundMusic.play({ loop: true });
         }
 
-        const background = this.#createBackground();
+        const background = this.#addBackground();
         const {
             renderTexture: itemImageDrawingTexture,
             image: itemMaskedImage,
             canvasTexture: itemImageReferenceTexture,
-        } = this.#createItemImage();
-        const itemOutlineImage = this.#createItemOutlineImage();
-        const { text: itemNameText, audio: itemNameAudio } = this.#createItemNameText();
+        } = this.#addItemImage();
+        const itemOutlineImage = this.#addItemOutlineImage();
+        const { text: itemNameText, audio: itemNameAudio } = this.#addItemNameText();
         let pointsToColor = this.#getPointsToColor(itemImageReferenceTexture);
         const totalPointsToColorCount = pointsToColor.length;
 
@@ -102,9 +102,6 @@ export default class Color extends Phaser.Scene {
                 return;
             }
 
-            console.log("complete");
-//            return;
-
             this.input.off("pointermove");
             this.input.off("pointerup");
             this.input.off("pointerdown");
@@ -119,23 +116,12 @@ export default class Color extends Phaser.Scene {
     }
 
     #onComplete() {
-        /*
-        const image = new Phaser.GameObjects.Image(
-            this,
-            window.innerWidth / 2,
-            window.innerHeight / 2,
-            this.#assets[0],
-        );
-        image.scale = this.#imageScale;
-        */
         const image = this.add.image(
             window.innerWidth / 2,
             window.innerHeight / 2,
             this.#assets[0],
         )
         image.setScale(this.#imageScale)
-
-//        this.#uiLayer.add(image);
 
         this.sound.add("hooray").play();
         this.add.particles(0, 0, "star", {
@@ -164,7 +150,7 @@ export default class Color extends Phaser.Scene {
         }, 5000);
     }
 
-    #createBackground() {
+    #addBackground() {
         const backgroundImageSize = IMAGE_SIZE / BACKGROUND_IMAGE_SIZE_DIVIDER;
         const backgroundImageMargin = 10;
         const verticalCount = Math.ceil(window.innerHeight / backgroundImageSize);
@@ -194,7 +180,7 @@ export default class Color extends Phaser.Scene {
         return backgroundImageGroup;
     }
 
-    #createItemNameText() {
+    #addItemNameText() {
         const audio = this.sound.add(this.#assets[0]);
         const name = i18next.t(this.#assets[0].replaceAll("/", "."));
         const text = this.add.text(0, 0, name.toUpperCase(), {
@@ -212,21 +198,16 @@ export default class Color extends Phaser.Scene {
         return { text, audio };
     }
 
-    #createItemOutlineImage() {
+    #addItemOutlineImage() {
         const image = this.add.image(window.innerWidth / 2, window.innerHeight / 2, `${this.#assets[0]}-outline`);
 
         return image;
     }
 
-    #createItemImage() {
-  //      const container = this.add.container(window.innerWidth/2, window.innerHeight/2)
-
+    #addItemImage() {
         const renderTexture = this.add.renderTexture(
             window.innerWidth / 2,
             window.innerHeight / 2,
-//            window.innerWidth,
-//            window.innerHeight
-//            300,300
             // TODO: Add texture height/width here and remove resize
         );
         renderTexture.setVisible(false)
@@ -237,10 +218,8 @@ export default class Color extends Phaser.Scene {
             window.innerWidth/2, 
             window.innerHeight/2, 
             this.#assets[0],
-//            add: false,
         );
         image.setScale(this.#imageScale)
-//        image.scale = this.#imageScale;
         image.setMask(mask);
 
         let canvasTexture = this.textures.createCanvas("c", window.innerWidth, window.innerHeight);
@@ -250,8 +229,6 @@ export default class Color extends Phaser.Scene {
             ((image.displayWidth - window.innerWidth) / 2) * -1,
             ((image.displayHeight - window.innerHeight) / 2) * -1,
         );
-
-//        container.add([image, ])
 
         return { renderTexture, image, canvasTexture };
     }
