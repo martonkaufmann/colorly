@@ -61,7 +61,7 @@ export default class Color extends Phaser.Scene {
         if (this.sound.get("background") === null) {
             const backgroundMusic = this.sound.add("background");
             backgroundMusic.setVolume(0.6);
-            //backgroundMusic.play({ loop: true });
+            backgroundMusic.play({ loop: true });
         }
 
         const background = this.#addBackground();
@@ -77,6 +77,9 @@ export default class Color extends Phaser.Scene {
 
         // TODO: Remove resize later
         itemImageDrawingTexture.resize(window.innerWidth, window.innerHeight);
+        // TODO: Check is this a hacky way to avoid render texture issue?
+        itemImageDrawingTexture.beginDraw();
+        itemImageDrawingTexture.draw();
 
         itemNameText.on("pointerdown", () => {
             itemNameAudio.play();
@@ -98,7 +101,8 @@ export default class Color extends Phaser.Scene {
             pointsToColor = this.#getUnColoredPoints(itemImageReferenceTexture, pointsToColor);
 
             // 98% of the image has to be colored
-            if ((totalPointsToColorCount / 100) * 2 < pointsToColor.length) {
+            const percentageToFill = (totalPointsToColorCount / 100) * (import.meta.env.PROD ? 2 : 90);
+            if (percentageToFill < pointsToColor.length) {
                 return;
             }
 
@@ -116,12 +120,8 @@ export default class Color extends Phaser.Scene {
     }
 
     #onComplete() {
-        const image = this.add.image(
-            window.innerWidth / 2,
-            window.innerHeight / 2,
-            this.#assets[0],
-        )
-        image.setScale(this.#imageScale)
+        const image = this.add.image(window.innerWidth / 2, window.innerHeight / 2, this.#assets[0]);
+        image.setScale(this.#imageScale);
 
         this.sound.add("hooray").play();
         this.add.particles(0, 0, "star", {
@@ -210,16 +210,12 @@ export default class Color extends Phaser.Scene {
             window.innerHeight / 2,
             // TODO: Add texture height/width here and remove resize
         );
-        renderTexture.setVisible(false)
+        renderTexture.setVisible(false);
 
         const mask = renderTexture.createBitmapMask();
 
-        const image = this.add.image(
-            window.innerWidth/2, 
-            window.innerHeight/2, 
-            this.#assets[0],
-        );
-        image.setScale(this.#imageScale)
+        const image = this.add.image(window.innerWidth / 2, window.innerHeight / 2, this.#assets[0]);
+        image.setScale(this.#imageScale);
         image.setMask(mask);
 
         let canvasTexture = this.textures.createCanvas("c", window.innerWidth, window.innerHeight);
