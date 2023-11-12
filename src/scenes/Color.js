@@ -1,12 +1,15 @@
 import Phaser from "phaser";
 import { BACKGROUND_IMAGE_SIZE_DIVIDER, IMAGE_SIZE } from "../constants";
 import i18next from "i18next";
+import { w } from "phaser/src/gameobjects/components/Transform";
 
 export default class Color extends Phaser.Scene {
     /** @type string[] */
     #assets;
     /** @type int */
     #imageScale;
+
+    #starEmitter;
 
     get #REFERENCE_COLOR() {
         return 11195392;
@@ -61,7 +64,7 @@ export default class Color extends Phaser.Scene {
         if (this.sound.get("background") === null) {
             const backgroundMusic = this.sound.add("background");
             backgroundMusic.setVolume(0.6);
-            backgroundMusic.play({ loop: true });
+            //backgroundMusic.play({ loop: true });
         }
 
         const background = this.#addBackground();
@@ -119,19 +122,63 @@ export default class Color extends Phaser.Scene {
         });
     }
 
+    update() {
+        if (this.#starEmitter) {
+            //            console.log('has star emitter')
+        }
+    }
+
     #onComplete() {
         const image = this.add.image(window.innerWidth / 2, window.innerHeight / 2, this.#assets[0]);
         image.setScale(this.#imageScale);
 
         this.sound.add("hooray").play();
-        this.add.particles(0, 0, "star", {
-            lifespan: 3500,
+        //        this.#starEmitter = this.add.particles(0, 0, "star", {
+        const starEmitter = this.add.particles(0, 0, "star", {
+            lifespan: 4000,
             angle: 90,
             x: { min: 0, max: window.innerWidth },
             y: { start: 0, end: window.innerHeight * 1.1 },
-            scale: 0.1,
+            scale: 0.15,
             frequency: 200,
+            /*
+            emitCallback: function() {
+                console.log('emit')
+                console.log(starEmitter)
+            }
+            */
         });
+
+        this.input.on("pointerdown", (pointer) => {
+            console.log("pointerdown")
+            console.log(starEmitter)
+            console.log(starEmitter.alive.length)
+            console.log(pointer.x)
+
+            
+            for (const particle of starEmitter.alive) {
+                console.log(particle.bounds)
+                console.log(pointer.x, pointer.y)
+                console.log(particle.getBounds())
+                console.log(
+                    particle.getBounds().contains(pointer.x, pointer.y)
+                )
+                //console.log(particle.x)
+                //const topRange = particle.x - 300
+                //const bottomRange = particle.x + 300
+
+//                if (particle.x - )
+            }
+            
+        })
+
+//        console.log(starEmitter);
+        starEmitter.onParticleEmit(function (particle) {
+//            console.log("emitted");
+//            console.log(particle.x);
+//            console.log(particle.y);
+        });
+
         this.tweens.add({
             targets: image,
             ease: "Linear",
