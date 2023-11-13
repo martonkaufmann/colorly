@@ -183,6 +183,10 @@ export default class Color extends Phaser.Scene {
             assets.push(assets.shift());
 
             this.input.off("pointerdown");
+            starEmitter.destroy()
+            starPopEmitter.destroy()
+            popSound.destroy()
+            image.destroy()
 
             this.scene.start("Color", { assets });
         }, 5000);
