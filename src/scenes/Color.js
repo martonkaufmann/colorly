@@ -9,8 +9,6 @@ export default class Color extends Phaser.Scene {
     /** @type int */
     #imageScale;
 
-    #starEmitter;
-
     get #REFERENCE_COLOR() {
         return 11195392;
     }
@@ -58,13 +56,19 @@ export default class Color extends Phaser.Scene {
         if (null === this.sound.get("hooray")) {
             this.load.audio("hooray", ["audio/hooray.ogg"]);
         }
+
+        if (null === this.sound.get("pop")) {
+            this.load.audio("pop", ["audio/pop.ogg"]);
+        }
+
+        this.load.atlas("stars", "stars.png", "stars.json");
     }
 
     create() {
         if (this.sound.get("background") === null) {
             const backgroundMusic = this.sound.add("background");
             backgroundMusic.setVolume(0.6);
-            //backgroundMusic.play({ loop: true });
+            backgroundMusic.play({ loop: true });
         }
 
         const background = this.#addBackground();
@@ -122,18 +126,13 @@ export default class Color extends Phaser.Scene {
         });
     }
 
-    update() {
-        if (this.#starEmitter) {
-            //            console.log('has star emitter')
-        }
-    }
-
     #onComplete() {
         const image = this.add.image(window.innerWidth / 2, window.innerHeight / 2, this.#assets[0]);
         image.setScale(this.#imageScale);
 
         this.sound.add("hooray").play();
-        //        this.#starEmitter = this.add.particles(0, 0, "star", {
+        const popSound = this.sound.add("pop");
+
         const starEmitter = this.add.particles(0, 0, "star", {
             lifespan: 4000,
             angle: 90,
@@ -141,42 +140,32 @@ export default class Color extends Phaser.Scene {
             y: { start: 0, end: window.innerHeight * 1.1 },
             scale: 0.15,
             frequency: 200,
-            /*
-            emitCallback: function() {
-                console.log('emit')
-                console.log(starEmitter)
-            }
-            */
+        });
+
+        const starPopEmitter = this.add.particles(0, 0, "stars", {
+            frame: ["red", "green", "blue", "purple", "azure"],
+            lifespan: 1000,
+            speed: 250,
+            scale: 0.03,
+            gravityY: 600,
+            emitting: false,
         });
 
         this.input.on("pointerdown", (pointer) => {
-            console.log("pointerdown")
-            console.log(starEmitter)
-            console.log(starEmitter.alive.length)
-            console.log(pointer.x)
+            const overlappingParticles = starEmitter.overlap(
+                new Phaser.Geom.Rectangle(pointer.x, pointer.y, IMAGE_SIZE * 0.1, IMAGE_SIZE * 0.1),
+            );
 
-            
-            for (const particle of starEmitter.alive) {
-                console.log(particle.bounds)
-                console.log(pointer.x, pointer.y)
-                console.log(particle.getBounds())
-                console.log(
-                    particle.getBounds().contains(pointer.x, pointer.y)
-                )
-                //console.log(particle.x)
-                //const topRange = particle.x - 300
-                //const bottomRange = particle.x + 300
-
-//                if (particle.x - )
+            if (overlappingParticles.length === 0) {
+                return;
             }
-            
-        })
 
-//        console.log(starEmitter);
-        starEmitter.onParticleEmit(function (particle) {
-//            console.log("emitted");
-//            console.log(particle.x);
-//            console.log(particle.y);
+            const overlappingParticle = overlappingParticles.shift();
+            overlappingParticle.kill();
+
+            starPopEmitter.emitParticleAt(overlappingParticle.worldPosition.x, overlappingParticle.worldPosition.y, 12);
+
+            popSound.play();
         });
 
         this.tweens.add({
@@ -192,6 +181,8 @@ export default class Color extends Phaser.Scene {
             const assets = this.#assets;
 
             assets.push(assets.shift());
+
+            this.input.off("pointerdown");
 
             this.scene.start("Color", { assets });
         }, 5000);
