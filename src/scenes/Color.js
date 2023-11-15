@@ -78,7 +78,7 @@ export default class Color extends Phaser.Scene {
             canvasTexture: itemImageReferenceTexture,
         } = this.#addItemImage();
         const itemOutlineImage = this.#addItemOutlineImage();
-        const { text: itemNameText, audio: itemNameAudio } = this.#addItemNameText();
+        const { container: itemNameButton } = this.#addItemNameButton();
         let pointsToColor = this.#getPointsToColor(itemImageReferenceTexture);
         const totalPointsToColorCount = pointsToColor.length;
 
@@ -87,10 +87,6 @@ export default class Color extends Phaser.Scene {
         // TODO: Check is this a hacky way to avoid render texture issue?
         itemImageDrawingTexture.beginDraw();
         itemImageDrawingTexture.draw();
-
-        itemNameText.on("pointerdown", () => {
-            itemNameAudio.play();
-        });
 
         this.input.on("pointermove", (pointer) => {
             if (pointer.isDown) {
@@ -121,6 +117,7 @@ export default class Color extends Phaser.Scene {
             itemImageDrawingTexture.destroy();
             itemMaskedImage.destroy();
             itemOutlineImage.destroy();
+            itemNameButton.destroy();
 
             this.#onComplete();
         });
@@ -183,10 +180,10 @@ export default class Color extends Phaser.Scene {
             assets.push(assets.shift());
 
             this.input.off("pointerdown");
-            starEmitter.destroy()
-            starPopEmitter.destroy()
-            popSound.destroy()
-            image.destroy()
+            starEmitter.destroy();
+            starPopEmitter.destroy();
+            popSound.destroy();
+            image.destroy();
 
             this.scene.start("Color", { assets });
         }, 5000);
@@ -222,22 +219,62 @@ export default class Color extends Phaser.Scene {
         return backgroundImageGroup;
     }
 
-    #addItemNameText() {
+    #addItemNameButton() {
         const audio = this.sound.add(this.#assets[0]);
         const name = i18next.t(this.#assets[0].replaceAll("/", "."));
         const text = this.add.text(0, 0, name.toUpperCase(), {
-            fontSize: "48px",
+            fontSize: "36px",
             fontStyle: "900",
-            fill: "#fff",
-            stroke: "#000",
-            strokeThickness: 3,
+            fill: "#000",
         });
 
+        text.setLetterSpacing(2);
         text.setInteractive();
-        text.setX(window.innerWidth / 2 - text.displayWidth / 2);
-        text.setY(text.displayHeight - 20);
+        // TODO: Check if setting depth is required
+        text.setDepth(text.depth + 3);
 
-        return { text, audio };
+        const textWidth = text.displayWidth;
+        const textHeight = text.displayHeight;
+        const textPositionX = window.innerWidth / 2 - textWidth / 2;
+        const textPositionY = textHeight + 10;
+
+        text.setX(textPositionX);
+        text.setY(textPositionY);
+
+        const innerRectangle = this.add.rectangle(
+            textPositionX + textWidth / 2,
+            textPositionY + textHeight / 2,
+            textWidth + 40,
+            textHeight + 20,
+            Phaser.Display.Color.GetColor(255, 255, 255),
+        );
+        innerRectangle.setDepth(text.depth - 1);
+        innerRectangle.setStrokeStyle(5, Phaser.Display.Color.GetColor(120, 80, 80));
+
+        const outerRectangle = this.add.rectangle(
+            textPositionX + textWidth / 2,
+            textPositionY + textHeight / 2,
+            textWidth + 64,
+            textHeight + 44,
+            Phaser.Display.Color.GetColor(255, 255, 255),
+        );
+        outerRectangle.setDepth(text.depth - 2);
+        outerRectangle.setStrokeStyle(5, Phaser.Display.Color.GetColor(120, 80, 80));
+        outerRectangle.setInteractive();
+
+        const container = this.add.container();
+        container.add(outerRectangle);
+        container.add(innerRectangle);
+        container.add(text);
+
+        outerRectangle.on("pointerdown", () => {
+            audio.play();
+        });
+        text.on("pointerdown", () => {
+            audio.play();
+        });
+
+        return { container };
     }
 
     #addItemOutlineImage() {
