@@ -225,13 +225,11 @@ export default class Color extends Phaser.Scene {
         const text = this.add.text(0, 0, name.toUpperCase(), {
             fontSize: "36px",
             fontStyle: "900",
-            fill: "#000",
+            fill: "#fff",
         });
 
         text.setLetterSpacing(2);
         text.setInteractive();
-        // TODO: Check if setting depth is required
-        text.setDepth(text.depth + 3);
 
         const textWidth = text.displayWidth;
         const textHeight = text.displayHeight;
@@ -241,33 +239,40 @@ export default class Color extends Phaser.Scene {
         text.setX(textPositionX);
         text.setY(textPositionY);
 
-        const innerRectangle = this.add.rectangle(
-            textPositionX + textWidth / 2,
-            textPositionY + textHeight / 2,
-            textWidth + 40,
-            textHeight + 20,
-            Phaser.Display.Color.GetColor(255, 255, 255),
-        );
-        innerRectangle.setDepth(text.depth - 1);
-        innerRectangle.setStrokeStyle(5, Phaser.Display.Color.GetColor(120, 80, 80));
+        const graphicsMarginLR = 40;
+        const graphicsMarginTB = 20;
+        const graphicsX = textPositionX - graphicsMarginLR / 2;
+        const graphicsY = textPositionY - graphicsMarginTB / 2;
+        const graphicsW = textWidth + graphicsMarginLR;
+        const graphicsH = textHeight + graphicsMarginTB;
 
-        const outerRectangle = this.add.rectangle(
-            textPositionX + textWidth / 2,
-            textPositionY + textHeight / 2,
-            textWidth + 64,
-            textHeight + 44,
-            Phaser.Display.Color.GetColor(255, 255, 255),
-        );
-        outerRectangle.setDepth(text.depth - 2);
-        outerRectangle.setStrokeStyle(5, Phaser.Display.Color.GetColor(120, 80, 80));
-        outerRectangle.setInteractive();
+        const graphicsOutlineMarginTB = 14;
+        const graphicsOutlineMarginLR = 14;
+        const graphicsOutlineX = graphicsX - graphicsOutlineMarginLR / 2;
+        const graphicsOutlineY = graphicsY - graphicsOutlineMarginTB / 2;
+        const graphicsOutlineW = graphicsW + graphicsOutlineMarginLR;
+        const graphicsOutlineH = graphicsH + graphicsOutlineMarginTB;
+        const graphicsOutline = this.add
+            .graphics()
+            .fillStyle(Phaser.Display.Color.GetColor(255, 102, 0), 1)
+            .fillRoundedRect(graphicsOutlineX, graphicsOutlineY, graphicsOutlineW, graphicsOutlineH, 20)
+            .setInteractive(
+                new Phaser.Geom.Rectangle(graphicsOutlineX, graphicsOutlineY, graphicsOutlineW, graphicsOutlineH),
+                // TODO: Add type hinting
+                (shape, x, y) => shape.contains(x, y),
+            );
+
+        const graphics = this.add
+            .graphics()
+            .fillStyle(Phaser.Display.Color.GetColor(131, 183, 247), 1)
+            .fillRoundedRect(graphicsX, graphicsY, graphicsW, graphicsH, 16);
 
         const container = this.add.container();
-        container.add(outerRectangle);
-        container.add(innerRectangle);
+        container.add(graphicsOutline);
+        container.add(graphics);
         container.add(text);
 
-        outerRectangle.on("pointerdown", () => {
+        graphicsOutline.on("pointerdown", () => {
             audio.play();
         });
         text.on("pointerdown", () => {
