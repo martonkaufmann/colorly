@@ -19,12 +19,18 @@ export default class StartGame extends Phaser.Scene {
     preload() {
         this.load.image("start-play", "play.png");
 
+        this.load.audio("menu", ["music/menu.ogg"])
+
         for (const [name, image] of Object.entries(this.#backgroundImages)) {
             this.load.svg(name, image);
         }
     }
 
     create() {
+        const menuMusic = this.sound.add("menu")
+        menuMusic.play({ loop: true })
+        menuMusic.setVolume(0.6)
+
         const imgSize = 64;
         let verticalCount = Math.floor(window.innerHeight / imgSize);
         let horizontalCount = Math.floor(window.innerWidth / imgSize);
@@ -51,6 +57,8 @@ export default class StartGame extends Phaser.Scene {
         playButtonImage.setInteractive();
         playButtonImage.scale = 0.08;
         playButtonImage.on("pointerdown", () => {
+            menuMusic.stop()
+
             this.scene.start("Color", {
                 assets: [
                     "coloring/fruits/apple",
