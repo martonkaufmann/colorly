@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { ASSETS } from "../constants";
 
 export default class StartGame extends Phaser.Scene {
     #backgroundImages = {
@@ -60,35 +61,7 @@ export default class StartGame extends Phaser.Scene {
             menuMusic.stop()
 
             this.scene.start("Color", {
-                assets: [
-                    "coloring/fruits/apple",
-                    "coloring/fruits/banana",
-                    "coloring/fruits/carrot",
-                    "coloring/fruits/cauliflower",
-                    "coloring/fruits/strawberry",
-                    "coloring/fruits/corn",
-                    "coloring/fruits/grapes",
-                    "coloring/fruits/mushroom",
-                    "coloring/fruits/orange",
-                    "coloring/fruits/pear",
-                    "coloring/fruits/peas",
-                    "coloring/fruits/pineapple",
-                    "coloring/fruits/plum",
-                    "coloring/fruits/aubergine",
-                    "coloring/fruits/blueberries",
-                    "coloring/fruits/broccoli",
-                    "coloring/fruits/cherries",
-                    "coloring/fruits/coconut",
-                    "coloring/fruits/tomato",
-                    "coloring/critters/butterfly",
-                    "coloring/critters/caterpillar",
-                    "coloring/critters/dragonfly",
-                    "coloring/critters/ladybug",
-                    "coloring/critters/scorpion",
-                    "coloring/critters/snail",
-                    "coloring/critters/spider",
-                    "coloring/critters/worm",
-                ],
+                assets: ASSETS,
             });
         });
     }
