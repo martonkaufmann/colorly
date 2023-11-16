@@ -25,7 +25,5 @@ window.addEventListener("load", () => {
         height: window.innerHeight,
         scene: [StartGame, Color],
         backgroundColor: "#fff7b4",
-        //        disablePreFX: true,
-        //        disablePostFX: true,
     });
 });

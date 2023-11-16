@@ -255,7 +255,7 @@ export default class Color extends Phaser.Scene {
         const graphicsOutline = this.add
             .graphics()
             .fillStyle(Phaser.Display.Color.GetColor(255, 102, 0), 1)
-            .fillRoundedRect(graphicsOutlineX, graphicsOutlineY, graphicsOutlineW, graphicsOutlineH, 20)
+            .fillRoundedRect(graphicsOutlineX, graphicsOutlineY, graphicsOutlineW, graphicsOutlineH, 24)
             .setInteractive(
                 new Phaser.Geom.Rectangle(graphicsOutlineX, graphicsOutlineY, graphicsOutlineW, graphicsOutlineH),
                 // TODO: Add type hinting
