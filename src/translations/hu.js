@@ -32,5 +32,10 @@ export default {
             spider: "pók",
             worm: "giliszta",
         },
+        animals: {
+            owl: "bagoly",
+            panda: "panda",
+            hippo: "viziló"
+        }
     },
 };

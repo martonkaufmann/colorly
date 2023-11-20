@@ -54,7 +54,7 @@ export default class SelectColorLevel extends Phaser.Scene {
                 this.sound.get("menu").stop();
 
                 this.scene.start("Color", {
-                    assets: [...ASSETS.slice(index, -1), ...ASSETS.slice(0, index)],
+                    assets: [...ASSETS.slice(index), ...ASSETS.slice(0, index)],
                 });
             });
         });
@@ -77,7 +77,6 @@ export default class SelectColorLevel extends Phaser.Scene {
 
         // TODO: Add type hinting
         this.input.on(Phaser.Input.Events.POINTER_UP, () => {
-            console.log("input pu");
             if (camera.scrollY < 0) {
                 camera.scrollY = 0;
             }

@@ -28,7 +28,7 @@ export const ASSETS = [
     "coloring/critters/snail",
     "coloring/critters/spider",
     "coloring/critters/worm",
-    "coloring/critters/panda",
-    "coloring/critters/owl",
-    "coloring/critters/hippo",
+    "coloring/animals/panda",
+    "coloring/animals/owl",
+    "coloring/animals/hippo",
 ];
