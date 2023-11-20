@@ -51,6 +51,8 @@ export default class SelectColorLevel extends Phaser.Scene {
                     return;
                 }
 
+                this.sound.get("menu").stop();
+
                 this.scene.start("Color", {
                     assets: [...ASSETS.slice(index, -1), ...ASSETS.slice(0, index)],
                 });
