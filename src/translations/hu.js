@@ -30,7 +30,7 @@ export default {
             scorpion: "skorpió",
             snail: "csiga",
             spider: "pók",
-            worm: "giliszta",
+            worm: "kukac",
         },
         animals: {
             owl: "bagoly",
