@@ -35,7 +35,9 @@ export default {
         animals: {
             owl: "bagoly",
             panda: "panda",
-            hippo: "viziló"
+            hippo: "viziló",
+            rhino: "orrszarvú",
+            frog: "béka",
         }
     },
 };

@@ -33,6 +33,8 @@ const assets = [
     "coloring/animals/panda",
     "coloring/animals/owl",
     "coloring/animals/hippo",
+    "coloring/animals/rhino",
+    "coloring/animals/frog",
 ];
 
 const cacheAssets = async () => {
