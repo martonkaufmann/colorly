@@ -30,7 +30,7 @@ export default class StartGame extends Phaser.Scene {
 
     create() {
         const menuMusic = this.sound.add("menu");
-        menuMusic.play({ loop: true })
+        menuMusic.play({ loop: true });
         menuMusic.setVolume(0.6);
 
         const imgSize = 64;
