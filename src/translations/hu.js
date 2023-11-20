@@ -1,4 +1,5 @@
 export default {
+    select_level: "válassz pályát",
     coloring: {
         fruits: {
             strawberry: "eper",

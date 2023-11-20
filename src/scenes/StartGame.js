@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import { ASSETS } from "../constants";
+import i18next from "i18next";
 
 export default class StartGame extends Phaser.Scene {
     #backgroundImages = {
@@ -20,7 +21,7 @@ export default class StartGame extends Phaser.Scene {
     preload() {
         this.load.image("start-play", "play.png");
 
-        this.load.audio("menu", ["music/menu.ogg"])
+        this.load.audio("menu", ["music/menu.ogg"]);
 
         for (const [name, image] of Object.entries(this.#backgroundImages)) {
             this.load.svg(name, image);
@@ -28,9 +29,9 @@ export default class StartGame extends Phaser.Scene {
     }
 
     create() {
-        const menuMusic = this.sound.add("menu")
+        const menuMusic = this.sound.add("menu");
         menuMusic.play({ loop: true })
-        menuMusic.setVolume(0.6)
+        menuMusic.setVolume(0.6);
 
         const imgSize = 64;
         let verticalCount = Math.floor(window.innerHeight / imgSize);
@@ -58,11 +59,63 @@ export default class StartGame extends Phaser.Scene {
         playButtonImage.setInteractive();
         playButtonImage.scale = 0.08;
         playButtonImage.on("pointerdown", () => {
-            menuMusic.stop()
+            menuMusic.stop();
 
             this.scene.start("Color", {
-                assets: ASSETS,
+                assets: [...ASSETS],
             });
         });
+
+        const { container: selectColorLevelButton } = this.#addSelectColorLevelButton();
+        selectColorLevelButton.setY(window.innerHeight / 2 + playButtonImage.displayHeight / 2 + 20);
+    }
+
+    #addSelectColorLevelButton() {
+        const name = i18next.t("select_level");
+        const text = this.add.text(0, 0, name.toUpperCase(), {
+            fontSize: `16px`,
+            fontStyle: "900",
+            fill: "#000",
+        });
+
+        text.setLetterSpacing(2);
+        text.setInteractive();
+
+        const textWidth = text.displayWidth;
+        const textHeight = text.displayHeight;
+        const textPositionX = window.innerWidth / 2 - textWidth / 2;
+        const textPositionY = textHeight + 10;
+
+        text.setX(textPositionX);
+        text.setY(textPositionY);
+
+        const graphicsMarginLR = 40;
+        const graphicsMarginTB = 20;
+        const graphicsX = textPositionX - graphicsMarginLR / 2;
+        const graphicsY = textPositionY - graphicsMarginTB / 2;
+        const graphicsW = textWidth + graphicsMarginLR;
+        const graphicsH = textHeight + graphicsMarginTB;
+        const graphics = this.add
+            .graphics()
+            .fillStyle(Phaser.Display.Color.GetColor(131, 183, 247), 1)
+            .fillRoundedRect(graphicsX, graphicsY, graphicsW, graphicsH, 12)
+            .setInteractive(
+                new Phaser.Geom.Rectangle(graphicsX, graphicsY, graphicsW, graphicsH),
+                // TODO: Add type hinting
+                (shape, x, y) => shape.contains(x, y),
+            );
+
+        const container = this.add.container();
+        container.add(graphics);
+        container.add(text);
+
+        graphics.on("pointerdown", () => {
+            this.scene.start("SelectColorLevel");
+        });
+        text.on("pointerdown", () => {
+            this.scene.start("SelectColorLevel");
+        });
+
+        return { container };
     }
 }

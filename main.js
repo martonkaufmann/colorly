@@ -4,6 +4,7 @@ import Color from "./src/scenes/Color";
 import i18next from "i18next";
 import en from "./src/translations/en";
 import hu from "./src/translations/hu";
+import SelectColorLevel from "./src/scenes/SelectColorLevel";
 
 if ("serviceWorker" in navigator && import.meta.env.PROD) {
     navigator.serviceWorker.register(`${import.meta.env.BASE_URL}serviceWorker.js`);
@@ -23,7 +24,7 @@ window.addEventListener("load", () => {
         type: Phaser.AUTO,
         width: window.innerWidth,
         height: window.innerHeight,
-        scene: [StartGame, Color],
+        scene: [StartGame, Color, SelectColorLevel],
         backgroundColor: "#fff7b4",
     });
 });
