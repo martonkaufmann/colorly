@@ -245,34 +245,21 @@ export default class Color extends Phaser.Scene {
         const graphicsY = textPositionY - graphicsMarginTB / 2;
         const graphicsW = textWidth + graphicsMarginLR;
         const graphicsH = textHeight + graphicsMarginTB;
-
-        const graphicsOutlineMarginTB = 14;
-        const graphicsOutlineMarginLR = 14;
-        const graphicsOutlineX = graphicsX - graphicsOutlineMarginLR / 2;
-        const graphicsOutlineY = graphicsY - graphicsOutlineMarginTB / 2;
-        const graphicsOutlineW = graphicsW + graphicsOutlineMarginLR;
-        const graphicsOutlineH = graphicsH + graphicsOutlineMarginTB;
-        const graphicsOutline = this.add
+        const graphics = this.add
             .graphics()
-            .fillStyle(Phaser.Display.Color.GetColor(255, 102, 0), 1)
-            .fillRoundedRect(graphicsOutlineX, graphicsOutlineY, graphicsOutlineW, graphicsOutlineH, 24)
+            .fillStyle(Phaser.Display.Color.GetColor(131, 183, 247), 1)
+            .fillRoundedRect(graphicsX, graphicsY, graphicsW, graphicsH, 16)
             .setInteractive(
-                new Phaser.Geom.Rectangle(graphicsOutlineX, graphicsOutlineY, graphicsOutlineW, graphicsOutlineH),
+                new Phaser.Geom.Rectangle(graphicsX, graphicsY, graphicsW, graphicsH),
                 // TODO: Add type hinting
                 (shape, x, y) => shape.contains(x, y),
             );
 
-        const graphics = this.add
-            .graphics()
-            .fillStyle(Phaser.Display.Color.GetColor(131, 183, 247), 1)
-            .fillRoundedRect(graphicsX, graphicsY, graphicsW, graphicsH, 16);
-
         const container = this.add.container();
-        container.add(graphicsOutline);
         container.add(graphics);
         container.add(text);
 
-        graphicsOutline.on("pointerdown", () => {
+        graphics.on("pointerdown", () => {
             audio.play();
         });
         text.on("pointerdown", () => {
