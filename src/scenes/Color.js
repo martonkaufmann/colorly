@@ -39,7 +39,10 @@ export default class Color extends Phaser.Scene {
 
         this.load.image(this.#assets[0], `${this.#assets[0]}.png`);
 
-        this.load.audio(this.#assets[0], [`audio/hu/${this.#assets[0]}.ogg`]);
+        this.load.audio(this.#assets[0], [
+            `audio/hu/${this.#assets[0]}.ogg`,
+            `audio/hu/${this.#assets[0]}.mp3`,
+        ]);
 
         if (false === this.textures.exists("star")) {
             this.load.image("star", "star.png");
@@ -50,15 +53,24 @@ export default class Color extends Phaser.Scene {
         }
 
         if (null === this.sound.get("background")) {
-            this.load.audio("background", ["music/background.ogg"]);
+            this.load.audio("background", [
+                "music/background.ogg",
+                "music/background.mp3",
+            ]);
         }
 
         if (null === this.sound.get("hooray")) {
-            this.load.audio("hooray", ["audio/hooray.ogg"]);
+            this.load.audio("hooray", [
+                "audio/hooray.ogg",
+                "audio/hooray.mp3",
+            ]);
         }
 
         if (null === this.sound.get("pop")) {
-            this.load.audio("pop", ["audio/pop.ogg"]);
+            this.load.audio("pop", [
+                "audio/pop.ogg",
+                "audio/pop.mp3",
+            ]);
         }
 
         this.load.atlas("stars", "stars.png", "stars.json");

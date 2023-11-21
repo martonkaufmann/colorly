@@ -21,7 +21,10 @@ export default class StartGame extends Phaser.Scene {
     preload() {
         this.load.image("start-play", "play.png");
 
-        this.load.audio("menu", ["music/menu.ogg"]);
+        this.load.audio("menu", [
+            "music/menu.ogg",
+            "music/menu.mp3",
+        ]);
 
         for (const [name, image] of Object.entries(this.#backgroundImages)) {
             this.load.svg(name, image);
